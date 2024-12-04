@@ -10,6 +10,8 @@ import gestor.GestorBD;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.Empleado;
 import modelo.Lote;
@@ -27,7 +29,8 @@ public class Operario extends javax.swing.JFrame {
     int emple2;
     int emple3;
     String horaInicial;
-    
+    String codError;
+    RegistroErrores re;
     
     public Operario(Empleado emp, Lote lote, Maquina maq, int emp2, int emp3, String horaIni){
         initComponents();
@@ -44,6 +47,7 @@ public class Operario extends javax.swing.JFrame {
         txtOperLote.setText("LOTE: " + lote.getCodLote());
         txtOperMaquina.setText("MAQUINA: " + maquina.getCodMaquina());
         txtOperFecha.setText(GestorBD.fecha());
+        this.setTitle(String.valueOf(empleado.getCodEmpleado()));
     }
 
     /**
@@ -69,7 +73,6 @@ public class Operario extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(631, 380));
         setResizable(false);
 
-        panelFondo.setBackground(new java.awt.Color(204, 204, 204));
         panelFondo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         panelOperSuperior1.setBackground(new java.awt.Color(0, 102, 204));
@@ -130,12 +133,49 @@ public class Operario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonOperRegErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOperRegErrorActionPerformed
-        RegistroErrores re = new RegistroErrores(this);
+        if(re == null){
+            re = new RegistroErrores(this);
         this.setVisible(false);
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Ya se ha registrado un error.\nCodigo:"+re.getCodErrorRegistrado());
+        }
+        
     }//GEN-LAST:event_botonOperRegErrorActionPerformed
 
     private void botonOperSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOperSalirActionPerformed
-        // TODO add your handling code here:
+        try {
+            if(re == null){
+                GestorBD.registrarFichajeSinError(this.empleado.getCodEmpleado(),this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial);
+                if(this.emple2 != 0){
+                    GestorBD.registrarFichajeSinError(this.emple2,this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial);
+                    if(this.emple3 != 0){
+                        GestorBD.registrarFichajeSinError(this.emple3,this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial);
+                    }
+                }
+                
+            }
+            else{
+                GestorBD.registrarFichajeConError(this.empleado.getCodEmpleado(),this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial,re.getCodErrorRegistrado());
+                if(this.emple2 != 0){
+                    GestorBD.registrarFichajeConError(this.emple2,this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial,re.getCodErrorRegistrado());
+                    if(this.emple3 != 0){
+                        GestorBD.registrarFichajeConError(this.emple3,this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial,re.getCodErrorRegistrado());
+                    }
+                }
+            }
+            Fichaje f = new Fichaje();
+            this.setVisible(false);
+        } 
+        catch (MyException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
     }//GEN-LAST:event_botonOperSalirActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -160,6 +200,10 @@ public class Operario extends javax.swing.JFrame {
 
     public String getNomMaqOper(){
         return String.valueOf(this.maquina.getNombreMaquina());
+    }
+    
+    public void setCodError(String codErr){
+        this.codError = codErr;
     }
     
     public void volver(){

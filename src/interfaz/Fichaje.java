@@ -412,7 +412,10 @@ public class Fichaje extends javax.swing.JFrame {
 
             if (botonSelec != 1) {
                 JOptionPane.showMessageDialog(this, "Un gestor no puede hacer fichaje múltiple.");
-            } 
+            }
+            else if(!inputCodLote.getText().equals("") ||!inputCodMaquina.getText().equals("")){
+                JOptionPane.showMessageDialog(this, "Un gestor no puede fichar en máquina ni con lote.");
+            }
             else {
                 ContrasenaGestor gestor = new ContrasenaGestor(e);
                 this.setVisible(false);

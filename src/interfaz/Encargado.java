@@ -22,6 +22,7 @@ public class Encargado extends javax.swing.JFrame {
     int emple2;
     int emple3;
     String horaInicial;
+    String codError;
     
     public Encargado(Empleado emp, Lote lote, Maquina maq, int emp2, int emp3, String horaIni) {
         initComponents();
@@ -38,6 +39,7 @@ public class Encargado extends javax.swing.JFrame {
         texoEncarLote.setText("LOTE: " + lote.getCodLote());
         textoEncarMaquina.setText("MAQUINA: " + maquina.getCodMaquina());
         encarFecha.setText(GestorBD.fecha());
+        this.setTitle(String.valueOf(empleado.getCodEmpleado()));
     }
 
     /**
@@ -172,7 +174,8 @@ public class Encargado extends javax.swing.JFrame {
     }//GEN-LAST:event_botonEncarListaErrorActionPerformed
 
     private void botonEncarRegErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEncarRegErrorActionPerformed
-        // TODO add your handling code here:
+        RegistroErrores re = new RegistroErrores(this);
+        this.setVisible(false);
     }//GEN-LAST:event_botonEncarRegErrorActionPerformed
 
     private void botonEncarNuevoLoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEncarNuevoLoteActionPerformed
@@ -204,6 +207,10 @@ public class Encargado extends javax.swing.JFrame {
 
     public String getCodMaqEncar(){
         return String.valueOf(this.maquina.getCodMaquina());
+    }
+    
+    public String getNomMaqEncar(){
+        return String.valueOf(this.maquina.getNombreMaquina());
     }
     
     public void volver(){

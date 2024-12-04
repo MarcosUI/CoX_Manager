@@ -8,8 +8,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -157,7 +161,20 @@ public class GestorBD {
         String anyo = Integer.toString(fecha.get(Calendar.YEAR));
         String mes = Integer.toString(fecha.get(Calendar.MONTH) + 1);
         String dia = Integer.toString(fecha.get(Calendar.DAY_OF_MONTH));
-        return dia + "-" + mes + "-" + anyo;
+        if(dia.length()<2){
+            dia = "0" + dia;
+        }
+        return dia + "/" + mes + "/" + anyo;
+    }
+    public static java.sql.Date fechaSQL() throws MyException{
+        DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date fecha = formato.parse(GestorBD.fecha());
+            return new java.sql.Date(fecha.getTime());
+            
+        } catch (ParseException ex) {
+           throw new MyException("Error creando fecha para SQL.\n"+ex.getMessage());
+        }
     }
     
     public static String horaActual(){
@@ -167,10 +184,6 @@ public class GestorBD {
         String minutos = Integer.toString(horaAct.get(Calendar.MINUTE));
         
         return horas + ":" + minutos;
-    }
-    
-    public static void registrarFichaje(){
-        
     }
     
     public static String numErrores() throws MyException{
@@ -186,14 +199,14 @@ public class GestorBD {
                 throw new MyException("Error accediendo a la tabla errores.");
             }
         } catch (SQLException ex) {
-            throw new MyException("Error obteniendo el codigo de error");
+            throw new MyException("Error contando los registros de la tabla \"ERRORES\"");
         }
         return String.valueOf(totalErrores);
     }
     
     public static boolean registrarError(String codErr, String desc, int cantidad, String hora) throws MyException{
         try {
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO ERRORES VALUES (?,?,?,?);");
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO errores VALUES (?,?,?,?);");
             ps.setString(1, codErr);
             ps.setString(2, desc);
             ps.setInt(3,cantidad);
@@ -204,15 +217,66 @@ public class GestorBD {
             }
             return false;
         } catch (SQLException ex) {
-            throw new MyException("Error al registrar el error.");
+            throw new MyException("Error al registrar el error.\n" + ex.getMessage());
         }
     }
-    
-    public static void registrarFichaje(int codEmple, int codLote, int codMaq, String horaIni, int cantidad) throws MyException{
-        try{
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO PRODUCCION VALUES(?,?,?,?,?,?,?)");
-        } catch (SQLException ex) {
-            throw new MyException("Error al registrar el fichaje");
+  
+    public static boolean registrarFichajeSinError(int codEmple, int codLote, int codMaquina,
+            String horaIni) throws MyException{
+
+        PreparedStatement ps;
+
+        // Mirar el formato que tiene la hora que devuelve la función, el separador en SQL para el dato TIME es ':'
+        String horaFin = GestorBD.horaActual();
+
+        try {
+            ps = conn.prepareStatement("INSERT INTO PRODUCCION(COD_EMP,COD_MAQ,COD_LOTE,DIA,HORA_INICIO,HORA_FIN,CANTIDAD)"
+                    + " VALUES (?,?,?,?,?,?,?);");
+            ps.setInt(1, codEmple);
+            ps.setInt(2, codMaquina);
+            ps.setInt(3, codLote);
+            ps.setDate(4, GestorBD.fechaSQL());
+            ps.setString(5, horaIni);
+            ps.setString(6, horaFin);
+            ps.setInt(7, 500);
+
+            if (ps.executeUpdate() == 1) {
+                return true;
+            }
+            return false;
+        } 
+        catch (SQLException ex) {
+            throw new MyException("Error registrando el fichaje.\n" + ex.getMessage());
+        }
+    }
+
+    public static boolean registrarFichajeConError(int codEmple, int codLote, int codMaquina, 
+            String horaIni, String codError) throws MyException {
+
+        PreparedStatement ps;
+
+        // Mirar el formato que tiene la hora que devuelve la función, el separador en SQL para el dato TIME es ':'
+        String horaFin = GestorBD.horaActual();
+        try {
+            ps = conn.prepareStatement("INSERT INTO PRODUCCION(COD_EMP,COD_MAQ,COD_LOTE,DIA,ERROR,HORA_INICIO,HORA_FIN,CANTIDAD)"
+                    + " VALUES (?,?,?,?,?,?,?,?);");
+
+            ps.setInt(1, codEmple);
+            ps.setInt(2, codMaquina);
+            ps.setInt(3, codLote);
+            ps.setDate(4, GestorBD.fechaSQL());
+            ps.setString(5, codError);
+            ps.setString(6, horaIni);
+            ps.setString(7, horaFin);
+            ps.setInt(8, 500);
+
+            if (ps.executeUpdate() == 1) {
+                return true;
+            }
+            return false;
+        } 
+        catch (SQLException ex) {
+            throw new MyException("Error registrando el fichaje.\n"+ex.getMessage());
         }
     }
 }

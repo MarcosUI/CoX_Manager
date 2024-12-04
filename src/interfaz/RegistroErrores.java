@@ -24,6 +24,7 @@ public class RegistroErrores extends javax.swing.JFrame {
     String nomMaquina;
     String codLote;
     String codEmple;
+    String codError;
     
     public RegistroErrores(Operario o) {
         initComponents();
@@ -33,6 +34,8 @@ public class RegistroErrores extends javax.swing.JFrame {
         this.nomMaquina = o.getNomMaqOper();
         this.codLote = o.getCodLoteOper();
         this.codEmple = o.getCodEmpOper();
+        this.setTitle("Registro de error");
+        this.txtRegErrFecha.setText(GestorBD.fecha());
     }
     
     public RegistroErrores(Encargado e) {
@@ -40,9 +43,11 @@ public class RegistroErrores extends javax.swing.JFrame {
         this.setVisible(true);
         
         this.encar = e;
-        this.nomMaquina = e.getCodMaqEncar();
+        this.nomMaquina = e.getNomMaqEncar();
         this.codLote = e.getCodLoteEncar();
         this.codEmple = e.getCodEmpEncar();
+        this.setTitle("Registro de error");
+        this.txtRegErrFecha.setText(GestorBD.fecha());
     }
     
     public RegistroErrores(Gestor g) {
@@ -50,6 +55,8 @@ public class RegistroErrores extends javax.swing.JFrame {
         this.setVisible(true);
         
         this.gestor = g;
+        this.setTitle("Registro de error");
+        this.txtRegErrFecha.setText(GestorBD.fecha());
     }
 
     /**
@@ -74,6 +81,7 @@ public class RegistroErrores extends javax.swing.JFrame {
         botonRegError = new javax.swing.JButton();
         txtRegErrCant = new javax.swing.JLabel();
         txtRegErrDesc = new javax.swing.JLabel();
+        botonSalirRegError = new javax.swing.JButton();
 
         panelOperSuperior1.setBackground(new java.awt.Color(0, 102, 204));
         panelOperSuperior1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -89,7 +97,10 @@ public class RegistroErrores extends javax.swing.JFrame {
         panelOperSuperior1.add(txtOperEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(631, 352));
+        setPreferredSize(new java.awt.Dimension(650, 400));
+        setResizable(false);
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(650, 400));
 
         panelRegErrSuperior.setBackground(new java.awt.Color(0, 102, 204));
         panelRegErrSuperior.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -97,12 +108,13 @@ public class RegistroErrores extends javax.swing.JFrame {
         txtRegErrFecha.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         txtRegErrFecha.setForeground(new java.awt.Color(240, 240, 240));
         txtRegErrFecha.setText("Fecha");
-        panelRegErrSuperior.add(txtRegErrFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 40, -1, -1));
+        panelRegErrSuperior.add(txtRegErrFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 40, -1, -1));
 
         txtRegErrEmpresa.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         txtRegErrEmpresa.setForeground(new java.awt.Color(240, 240, 240));
+        txtRegErrEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/icono_CoX.png"))); // NOI18N
         txtRegErrEmpresa.setText("CoX Manager");
-        panelRegErrSuperior.add(txtRegErrEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
+        panelRegErrSuperior.add(txtRegErrEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         inputRegErrCant.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -128,24 +140,36 @@ public class RegistroErrores extends javax.swing.JFrame {
         txtRegErrDesc.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtRegErrDesc.setText("Descripción:");
 
+        botonSalirRegError.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        botonSalirRegError.setText("CANCELAR");
+        botonSalirRegError.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonSalirRegErrorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelRegErrSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(panelRegErrSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, 630, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(38, 38, 38)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(botonRegError, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtRegErrCant, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtRegErrDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(46, 46, 46)
+                    .addComponent(txtRegErrDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonSalirRegError, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(inputRegErrCant, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(inputRegErrCant, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(29, 29, 29))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(94, 94, 94)
+                        .addComponent(botonRegError, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,14 +179,17 @@ public class RegistroErrores extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inputRegErrCant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtRegErrCant))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(txtRegErrDesc)
+                        .addGap(56, 56, 56)
+                        .addComponent(botonSalirRegError, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(botonRegError, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(25, 25, 25))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -173,7 +200,7 @@ public class RegistroErrores extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
         );
 
         pack();
@@ -184,12 +211,11 @@ public class RegistroErrores extends javax.swing.JFrame {
     }//GEN-LAST:event_inputRegErrCantActionPerformed
 
     private void botonRegErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegErrorActionPerformed
-        
-        
+
         try{
-            String codErr = this.nomMaquina + this.codLote + GestorBD.numErrores();
+            String codErr = this.nomMaquina.substring(0, 3) + this.codLote + GestorBD.numErrores();
             int cantidad = Integer.parseInt(inputRegErrCant.getText());
-            
+            this.codError = codErr;
             if(GestorBD.registrarError(codErr, inputRegErrDesc.getText(), cantidad, GestorBD.horaActual())){
                 
                 JOptionPane.showMessageDialog(this, "Error "+ codErr+" registrado por el empleado:" + this.codEmple);
@@ -220,8 +246,24 @@ public class RegistroErrores extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_botonRegErrorActionPerformed
 
+    private void botonSalirRegErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonSalirRegErrorActionPerformed
+        switch (codEmple.charAt(0)) {
+            case '1':
+                oper.volver();
+                break;
+            case '2':
+                encar.volver();
+                break;
+            default:
+                gestor.volver();
+                break;
+        }
+        this.setVisible(false);
+    }//GEN-LAST:event_botonSalirRegErrorActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonRegError;
+    private javax.swing.JButton botonSalirRegError;
     private javax.swing.JTextField inputRegErrCant;
     private javax.swing.JTextArea inputRegErrDesc;
     private javax.swing.JPanel jPanel1;
@@ -235,4 +277,8 @@ public class RegistroErrores extends javax.swing.JFrame {
     private javax.swing.JLabel txtRegErrEmpresa;
     private javax.swing.JLabel txtRegErrFecha;
     // End of variables declaration//GEN-END:variables
+
+    public String getCodErrorRegistrado(){
+        return this.codError;
+    }
 }

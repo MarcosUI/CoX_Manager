@@ -23,6 +23,7 @@ public class Gestor extends javax.swing.JFrame {
         
         txtGestorEmple.setText("EMPLEADO: " + empleado.getCodEmpleado());
         txtGestorFecha.setText(GestorBD.fecha());
+        this.setTitle(String.valueOf(empleado.getCodEmpleado()));
     }
 
     /**
