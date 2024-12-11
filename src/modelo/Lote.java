@@ -15,15 +15,20 @@ public class Lote {
     private int tipoLote;
     private int cantLote;
     private boolean imperfLote;
+    private boolean activo;
     
-    public Lote (int codL, int tipoL, int cantL, boolean imperfL){
+    public Lote (int codL, int tipoL, int cantL, boolean imperfL, boolean loteActivo){
         this.codLote = codL;
         this.tipoLote = tipoL;
         this.cantLote = cantL;
         this.imperfLote = imperfL;
+        this.activo = loteActivo;
     }
 
     public int getCodLote() {
         return this.codLote;
+    }
+    public boolean getActivo(){
+        return this.activo;
     }
 }

@@ -31,6 +31,7 @@ public class Fichaje extends javax.swing.JFrame {
         lineaEmp3.setVisible(false);
         
         txtFichajeFecha.setText(GestorBD.fecha());
+        this.setTitle("CoX Manager");
     }
 
     /**
@@ -338,35 +339,40 @@ public class Fichaje extends javax.swing.JFrame {
         } 
         else if (l == null) {
             JOptionPane.showMessageDialog(this, "El codigo de lote introducido no existe.");
-        } 
+        }
+        else if (!l.getActivo()){
+            JOptionPane.showMessageDialog(this, "El lote introducido no está activo.");
+        }
         else if (m == null) {
             JOptionPane.showMessageDialog(this, "El codigo de maquina introducido no existe.");
         } 
         else if (m.getNumOperMaquina() != botonSelec) {
             JOptionPane.showMessageDialog(this, "La maquina introducida requiere "
                     + m.getNumOperMaquina() + " operarios.");
-        } 
+        }
         else {
             
             switch (botonSelec) {
                 case 2:
                     if (GestorBD.existeEmpleado(inputCodEmple2.getText()) == null) {
                         JOptionPane.showMessageDialog(this, "El codigo de empleado 2 no existe.");
-                    } 
-                    else {
-                        if(inputCodEmple1.getText().charAt(0) == '2'){
+                    } else {
+                        if (inputCodEmple1.getText().charAt(0) == '2') {
                             Encargado encarg = new Encargado(e, l, m,
-                                Integer.parseInt(inputCodEmple2.getText()), 0, GestorBD.horaActual());
+                                    Integer.parseInt(inputCodEmple2.getText()), 0, GestorBD.horaActual());
                             this.setVisible(false);
-                        }
-                        else{
+                        } 
+                        else if (inputCodEmple2.getText().charAt(0) == '3') {
+                            JOptionPane.showMessageDialog(this, "El fichaje de equipo no es compatible con códigos de gestor");
+                        } 
+                        else {
                             Operario oper = new Operario(e, l, m,
-                                Integer.parseInt(inputCodEmple2.getText()), 0, GestorBD.horaActual());
+                                    Integer.parseInt(inputCodEmple2.getText()), 0, GestorBD.horaActual());
                             this.setVisible(false);
                         }
-                    }   
+                    }
                     break;
-                    
+
                 case 3:
                     if (GestorBD.existeEmpleado(inputCodEmple2.getText()) == null) {
                         JOptionPane.showMessageDialog(this, "El codigo de empleado 2 no existe.");
@@ -374,29 +380,30 @@ public class Fichaje extends javax.swing.JFrame {
                     else if (GestorBD.existeEmpleado(inputCodEmple3.getText()) == null) {
                         JOptionPane.showMessageDialog(this, "El codigo de empleado 3 no existe.");
                     } 
+                    else if (inputCodEmple2.getText().charAt(0) == '3' || inputCodEmple3.getText().charAt(0) == '3') {
+                        JOptionPane.showMessageDialog(this, "El fichaje de equipo no es compatible con códigos de gestor");
+                    } 
                     else {
-                        if(inputCodEmple1.getText().charAt(0) == '2'){
+                        if (inputCodEmple1.getText().charAt(0) == '2') {
                             Encargado encarg = new Encargado(e, l, m, Integer.parseInt(inputCodEmple2.getText()),
                                     Integer.parseInt(inputCodEmple3.getText()), GestorBD.horaActual());
                             this.setVisible(false);
-                        }
-                        else{
+                        } else {
                             Operario oper = new Operario(e, l, m, Integer.parseInt(inputCodEmple2.getText()),
                                     Integer.parseInt(inputCodEmple3.getText()), GestorBD.horaActual());
                             this.setVisible(false);
                         }
-                    }   
+                    }
                     break;
-                    
+
                 default:
-                    if(inputCodEmple1.getText().charAt(0) == '2'){
-                            Encargado encarg = new Encargado(e, l, m, 0, 0, GestorBD.horaActual());
-                            this.setVisible(false);
-                        }
-                        else{
-                            Operario oper = new Operario(e, l, m, 0, 0, GestorBD.horaActual());
-                            this.setVisible(false);
-                        }
+                    if (inputCodEmple1.getText().charAt(0) == '2') {
+                        Encargado encarg = new Encargado(e, l, m, 0, 0, GestorBD.horaActual());
+                        this.setVisible(false);
+                    } else {
+                        Operario oper = new Operario(e, l, m, 0, 0, GestorBD.horaActual());
+                        this.setVisible(false);
+                    }
                     break;
             }
         }

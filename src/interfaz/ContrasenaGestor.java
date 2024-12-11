@@ -121,7 +121,7 @@ public class ContrasenaGestor extends javax.swing.JFrame {
             else if (GestorBD.compruebaContrasena(inputContrasena.getText(), String.valueOf(emp.getCodEmpleado()))){
                 JOptionPane.showMessageDialog(this, "Contraseña correcta.\nEntrando en usuario " +
                         emp.getCodEmpleado() + ", " + emp.getNombre());
-                Gestor gestor = new Gestor(this.emp);
+                Gestor gestor = new Gestor(this.emp,GestorBD.horaActual());
                 this.setVisible(false);
             }
             else if(intentos == 0){

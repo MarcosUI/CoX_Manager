@@ -128,7 +128,7 @@ public class GestorBD {
             }
             else{
                 return new Lote(rs.getInt("cod_lote"),rs.getInt("tipo"),
-                                    rs.getInt("cantidad"),rs.getBoolean("imperf_lote"));
+                                    rs.getInt("cantidad"),rs.getBoolean("imperf_lote"),rs.getBoolean("lote_activo"));
             }
             
         }
@@ -221,14 +221,13 @@ public class GestorBD {
         }
     }
   
-    public static boolean registrarFichajeSinError(int codEmple, int codLote, int codMaquina,
-            String horaIni) throws MyException{
+     public static void registrarFichajeSinError(int codEmple, int codLote, int codMaquina, 
+            String horaIni) throws MyException {
 
         PreparedStatement ps;
 
         // Mirar el formato que tiene la hora que devuelve la función, el separador en SQL para el dato TIME es ':'
         String horaFin = GestorBD.horaActual();
-
         try {
             ps = conn.prepareStatement("INSERT INTO PRODUCCION(COD_EMP,COD_MAQ,COD_LOTE,DIA,HORA_INICIO,HORA_FIN,CANTIDAD)"
                     + " VALUES (?,?,?,?,?,?,?);");
@@ -240,17 +239,15 @@ public class GestorBD {
             ps.setString(6, horaFin);
             ps.setInt(7, 500);
 
-            if (ps.executeUpdate() == 1) {
-                return true;
-            }
-            return false;
+            ps.executeUpdate();
+            
         } 
         catch (SQLException ex) {
-            throw new MyException("Error registrando el fichaje.\n" + ex.getMessage());
+            throw new MyException("Error registrando el fichaje.\n"+ex.getMessage());
         }
     }
 
-    public static boolean registrarFichajeConError(int codEmple, int codLote, int codMaquina, 
+    public static void registrarFichajeConError(int codEmple, int codLote, int codMaquina, 
             String horaIni, String codError) throws MyException {
 
         PreparedStatement ps;
@@ -270,13 +267,50 @@ public class GestorBD {
             ps.setString(7, horaFin);
             ps.setInt(8, 500);
 
-            if (ps.executeUpdate() == 1) {
-                return true;
-            }
-            return false;
+            ps.executeUpdate();
+            
         } 
         catch (SQLException ex) {
             throw new MyException("Error registrando el fichaje.\n"+ex.getMessage());
+        }
+    }
+    
+    public static void registroFichajeGestor(int codGestor, String horaInicial) throws MyException{
+        PreparedStatement ps;
+        String horaFinal = GestorBD.horaActual();
+        try{
+            ps = conn.prepareStatement("INSERT INTO FICHAJE_GESTORES(COD_EMP, DIA_FICHAJE, HORA_INICIO, HORA_FIN) "
+                    + "VALUES (?,?,?,?)");
+            ps.setInt(1, codGestor);
+            ps.setDate(2,GestorBD.fechaSQL());
+            ps.setString(3, horaInicial);
+            ps.setString(4, horaFinal);
+            
+            ps.executeUpdate();
+        } 
+        catch (SQLException ex) {
+            throw new MyException("Error registrando el fichaje del gestor " + codGestor + "\n" + ex.getMessage());
+        }
+    }
+    
+    public static void altaLote(int codLote,int tipo, int cantidad, boolean imperf) throws MyException{
+        PreparedStatement ps;
+        if (GestorBD.existeLote(String.valueOf(codLote)) == null) {
+            throw new MyException("El lote con codigo " +codLote +" ya existe.");
+        } 
+        else {
+            try {
+                ps = conn.prepareStatement("INSERT INTO LOTES VALUES (?,?,?,?,?)");
+                ps.setInt(1, codLote);
+                ps.setInt(2, tipo);
+                ps.setInt(1, cantidad);
+                ps.setBoolean(4, imperf);
+                ps.setBoolean(5, true);
+
+                ps.executeUpdate();
+            } catch (SQLException ex) {
+                throw new MyException("Error registrando el nuevo lote.");
+            }
         }
     }
 }

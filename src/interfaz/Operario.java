@@ -140,20 +140,23 @@ public class Operario extends javax.swing.JFrame {
         else{
             JOptionPane.showMessageDialog(this, "Ya se ha registrado un error.\nCodigo:"+re.getCodErrorRegistrado());
         }
-        
     }//GEN-LAST:event_botonOperRegErrorActionPerformed
 
     private void botonOperSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOperSalirActionPerformed
+        String fichados = "";
         try {
             if(re == null){
                 GestorBD.registrarFichajeSinError(this.empleado.getCodEmpleado(),this.lote.getCodLote(),this.maquina.getCodMaquina(),
                                         this.horaInicial);
+                fichados += this.empleado.getCodEmpleado();
                 if(this.emple2 != 0){
                     GestorBD.registrarFichajeSinError(this.emple2,this.lote.getCodLote(),this.maquina.getCodMaquina(),
                                         this.horaInicial);
+                    fichados += ", " + this.emple2;
                     if(this.emple3 != 0){
                         GestorBD.registrarFichajeSinError(this.emple3,this.lote.getCodLote(),this.maquina.getCodMaquina(),
                                         this.horaInicial);
+                        fichados += ", " + this.emple3;
                     }
                 }
                 
@@ -161,15 +164,23 @@ public class Operario extends javax.swing.JFrame {
             else{
                 GestorBD.registrarFichajeConError(this.empleado.getCodEmpleado(),this.lote.getCodLote(),this.maquina.getCodMaquina(),
                                         this.horaInicial,re.getCodErrorRegistrado());
+                fichados += this.empleado.getCodEmpleado();
                 if(this.emple2 != 0){
                     GestorBD.registrarFichajeConError(this.emple2,this.lote.getCodLote(),this.maquina.getCodMaquina(),
                                         this.horaInicial,re.getCodErrorRegistrado());
+                    fichados += ", " + this.emple2;
                     if(this.emple3 != 0){
                         GestorBD.registrarFichajeConError(this.emple3,this.lote.getCodLote(),this.maquina.getCodMaquina(),
                                         this.horaInicial,re.getCodErrorRegistrado());
+                        fichados += ", " + this.emple3;
                     }
                 }
+                fichados += "\nCon error: " + re.getCodErrorRegistrado();
             }
+            if (maquina.getCodMaquina() == 7){
+                fichados += "\n Lote " + lote.getCodLote() + " terminado. Registrado como \"NO ACTIVO\" en Base de Datos.";
+            }
+            JOptionPane.showMessageDialog(this, "Registrado el fichaje para: " + fichados);
             Fichaje f = new Fichaje();
             this.setVisible(false);
         } 

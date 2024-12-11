@@ -5,7 +5,9 @@
  */
 package interfaz;
 
+import excepciones.MyException;
 import gestor.GestorBD;
+import javax.swing.JOptionPane;
 import modelo.Empleado;
 import modelo.Lote;
 import modelo.Maquina;
@@ -23,6 +25,7 @@ public class Encargado extends javax.swing.JFrame {
     int emple3;
     String horaInicial;
     String codError;
+    RegistroErrores re;
     
     public Encargado(Empleado emp, Lote lote, Maquina maq, int emp2, int emp3, String horaIni) {
         initComponents();
@@ -71,7 +74,7 @@ public class Encargado extends javax.swing.JFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         botonEncarSalir.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        botonEncarSalir.setText("TERMINAR FICHAJE");
+        botonEncarSalir.setText("SALIR");
         botonEncarSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonEncarSalirActionPerformed(evt);
@@ -166,7 +169,50 @@ public class Encargado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonEncarSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEncarSalirActionPerformed
-        // TODO add your handling code here:
+         String fichados = "";
+        try {
+            if(re == null){
+                GestorBD.registrarFichajeSinError(this.empleado.getCodEmpleado(),this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial);
+                fichados += this.empleado.getCodEmpleado();
+                if(this.emple2 != 0){
+                    GestorBD.registrarFichajeSinError(this.emple2,this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial);
+                    fichados += ", " + this.emple2;
+                    if(this.emple3 != 0){
+                        GestorBD.registrarFichajeSinError(this.emple3,this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial);
+                        fichados += ", " + this.emple3;
+                    }
+                }
+                
+            }
+            else{
+                GestorBD.registrarFichajeConError(this.empleado.getCodEmpleado(),this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial,re.getCodErrorRegistrado());
+                fichados += this.empleado.getCodEmpleado();
+                if(this.emple2 != 0){
+                    GestorBD.registrarFichajeConError(this.emple2,this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial,re.getCodErrorRegistrado());
+                    fichados += ", " + this.emple2;
+                    if(this.emple3 != 0){
+                        GestorBD.registrarFichajeConError(this.emple3,this.lote.getCodLote(),this.maquina.getCodMaquina(),
+                                        this.horaInicial,re.getCodErrorRegistrado());
+                        fichados += ", " + this.emple3;
+                    }
+                }
+                fichados += "\nCon error: " + re.getCodErrorRegistrado();
+            }
+            if (maquina.getCodMaquina() == 7){
+                fichados += "\n Lote " + lote.getCodLote() + " terminado. Registrado como \"NO ACTIVO\" en Base de Datos.";
+            }
+            JOptionPane.showMessageDialog(this, "Registrado el fichaje para: " + fichados);
+            Fichaje f = new Fichaje();
+            this.setVisible(false);
+        } 
+        catch (MyException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
     }//GEN-LAST:event_botonEncarSalirActionPerformed
 
     private void botonEncarListaErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEncarListaErrorActionPerformed
@@ -174,12 +220,18 @@ public class Encargado extends javax.swing.JFrame {
     }//GEN-LAST:event_botonEncarListaErrorActionPerformed
 
     private void botonEncarRegErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEncarRegErrorActionPerformed
-        RegistroErrores re = new RegistroErrores(this);
+        if(re == null){
+            re = new RegistroErrores(this);
         this.setVisible(false);
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Ya se ha registrado un error.\nCodigo:"+re.getCodErrorRegistrado());
+        }
     }//GEN-LAST:event_botonEncarRegErrorActionPerformed
 
     private void botonEncarNuevoLoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEncarNuevoLoteActionPerformed
-        // TODO add your handling code here:
+        RegistroLote  rL = new RegistroLote(this);
+        this.setVisible(false);
     }//GEN-LAST:event_botonEncarNuevoLoteActionPerformed
 
 

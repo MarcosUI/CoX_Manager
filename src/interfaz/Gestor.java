@@ -5,7 +5,11 @@
  */
 package interfaz;
 
+import excepciones.MyException;
 import gestor.GestorBD;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import modelo.Empleado;
 
 /**
@@ -15,11 +19,13 @@ import modelo.Empleado;
 public class Gestor extends javax.swing.JFrame {
 
     Empleado empleado;
+    String horaInicial;
     
-    public Gestor(Empleado e) {
+    public Gestor(Empleado e, String horaIni) {
         initComponents();
         this.setVisible(true);
         this.empleado = e;
+        this.horaInicial = horaIni;
         
         txtGestorEmple.setText("EMPLEADO: " + empleado.getCodEmpleado());
         txtGestorFecha.setText(GestorBD.fecha());
@@ -47,7 +53,6 @@ public class Gestor extends javax.swing.JFrame {
         botonOperRegEmple = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(650, 400));
         setResizable(false);
         setSize(new java.awt.Dimension(631, 352));
 
@@ -106,6 +111,11 @@ public class Gestor extends javax.swing.JFrame {
 
         botonOperSalir.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         botonOperSalir.setText("SALIR");
+        botonOperSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonOperSalirActionPerformed(evt);
+            }
+        });
         panelFondo.add(botonOperSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 240, 130, 50));
 
         botonGestorListaErr.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -143,6 +153,17 @@ public class Gestor extends javax.swing.JFrame {
     private void botonOperRegEmpleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOperRegEmpleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_botonOperRegEmpleActionPerformed
+
+    private void botonOperSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOperSalirActionPerformed
+        try {
+            GestorBD.registroFichajeGestor(this.empleado.getCodEmpleado(),this.horaInicial);
+            JOptionPane.showMessageDialog(this, "Fichaje con código " + empleado.getCodEmpleado() + " registrado.");
+            Fichaje f = new Fichaje();
+            this.setVisible(false);
+        } catch (MyException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }//GEN-LAST:event_botonOperSalirActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonGestorListaErr;

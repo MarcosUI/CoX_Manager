@@ -37,6 +37,11 @@ public class ListaErrores extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaErrores = new javax.swing.JTable();
         botonListaSalir = new javax.swing.JButton();
+        inputFechaInicialErrores = new com.toedter.calendar.JDateChooser();
+        inputFechaFinalErrores = new com.toedter.calendar.JDateChooser();
+        txtFechaInicialErrores = new javax.swing.JLabel();
+        botonGenerarListaErrores = new javax.swing.JButton();
+        txtFechaFinalErrores = new javax.swing.JLabel();
 
         jMenu1.setText("jMenu1");
 
@@ -55,6 +60,7 @@ public class ListaErrores extends javax.swing.JFrame {
 
         nomListaEmpresa.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         nomListaEmpresa.setForeground(new java.awt.Color(240, 240, 240));
+        nomListaEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/icono_CoX.png"))); // NOI18N
         nomListaEmpresa.setText("CoX Manager");
 
         javax.swing.GroupLayout panelListaSuperiorLayout = new javax.swing.GroupLayout(panelListaSuperior);
@@ -62,20 +68,19 @@ public class ListaErrores extends javax.swing.JFrame {
         panelListaSuperiorLayout.setHorizontalGroup(
             panelListaSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelListaSuperiorLayout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addContainerGap()
                 .addComponent(nomListaEmpresa)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 329, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(listaFecha)
-                .addContainerGap())
+                .addGap(50, 50, 50))
         );
         panelListaSuperiorLayout.setVerticalGroup(
             panelListaSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelListaSuperiorLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
+                .addContainerGap(12, Short.MAX_VALUE)
                 .addGroup(panelListaSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nomListaEmpresa)
-                    .addComponent(listaFecha))
-                .addContainerGap(30, Short.MAX_VALUE))
+                    .addComponent(listaFecha)))
         );
 
         tablaErrores.setModel(new javax.swing.table.DefaultTableModel(
@@ -106,33 +111,62 @@ public class ListaErrores extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tablaErrores);
 
+        botonListaSalir.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         botonListaSalir.setText("SALIR");
+
+        txtFechaInicialErrores.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtFechaInicialErrores.setText("Fecha Inicial:");
+
+        botonGenerarListaErrores.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        botonGenerarListaErrores.setText("CARGAR DATOS");
+
+        txtFechaFinalErrores.setText("jLabel2");
 
         javax.swing.GroupLayout panelFondoListaLayout = new javax.swing.GroupLayout(panelFondoLista);
         panelFondoLista.setLayout(panelFondoListaLayout);
         panelFondoListaLayout.setHorizontalGroup(
             panelFondoListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelListaSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panelFondoListaLayout.createSequentialGroup()
                 .addGroup(panelFondoListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFondoListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(panelFondoListaLayout.createSequentialGroup()
+                            .addGap(38, 38, 38)
+                            .addComponent(txtFechaInicialErrores)
+                            .addGap(18, 18, 18)
+                            .addComponent(inputFechaInicialErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(63, 63, 63)
+                            .addComponent(txtFechaFinalErrores)
+                            .addGap(57, 57, 57)
+                            .addComponent(inputFechaFinalErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(46, 46, 46))
+                        .addGroup(panelFondoListaLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(botonGenerarListaErrores)
+                            .addGap(176, 176, 176)
+                            .addComponent(botonListaSalir)))
                     .addGroup(panelFondoListaLayout.createSequentialGroup()
-                        .addGap(254, 254, 254)
-                        .addComponent(botonListaSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(panelListaSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(panelFondoListaLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(24, 24, 24)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
         panelFondoListaLayout.setVerticalGroup(
             panelFondoListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFondoListaLayout.createSequentialGroup()
                 .addComponent(panelListaSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addGroup(panelFondoListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(inputFechaInicialErrores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputFechaFinalErrores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtFechaInicialErrores)
+                    .addComponent(txtFechaFinalErrores))
                 .addGap(18, 18, 18)
-                .addComponent(botonListaSalir, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
-                .addGap(22, 22, 22))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addGroup(panelFondoListaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botonListaSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(botonGenerarListaErrores, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -150,7 +184,10 @@ public class ListaErrores extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonGenerarListaErrores;
     private javax.swing.JButton botonListaSalir;
+    private com.toedter.calendar.JDateChooser inputFechaFinalErrores;
+    private com.toedter.calendar.JDateChooser inputFechaInicialErrores;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -159,5 +196,7 @@ public class ListaErrores extends javax.swing.JFrame {
     private javax.swing.JPanel panelFondoLista;
     private javax.swing.JPanel panelListaSuperior;
     private javax.swing.JTable tablaErrores;
+    private javax.swing.JLabel txtFechaFinalErrores;
+    private javax.swing.JLabel txtFechaInicialErrores;
     // End of variables declaration//GEN-END:variables
 }
