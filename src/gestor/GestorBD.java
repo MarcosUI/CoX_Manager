@@ -1,6 +1,7 @@
 
 package gestor;
 
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import excepciones.MyException;
 import java.io.File;
 import java.sql.Connection;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import modelo.Empleado;
 import modelo.Lote;
 import modelo.Maquina;
@@ -51,13 +53,17 @@ public class GestorBD {
             Class.forName("com.mysql.jdbc.Driver");
             this.conn = DriverManager.getConnection(conexion + db, user, password);
             return true;
-        } catch (ClassNotFoundException ex) {
-            //ex.printStackTrace();
+        } 
+        catch (CommunicationsException ex){
+            throw new MyException("No ha sido posible conectarse a la base de datos.");
+        } 
+        catch (ClassNotFoundException ex) {
             throw new MyException("No has puesto la librería MySql");
-        } catch (SQLException ex) {
+        } 
+        catch (SQLException ex) {
             ex.printStackTrace();
             throw new MyException(ex.getSQLState() + " Error al conectarse");
-        }
+        } 
     }
 
     public void cerrarConexion() throws MyException {
@@ -157,7 +163,6 @@ public class GestorBD {
     }
     public static String fecha(){
         Calendar fecha = new GregorianCalendar();
-        
         String anyo = Integer.toString(fecha.get(Calendar.YEAR));
         String mes = Integer.toString(fecha.get(Calendar.MONTH) + 1);
         String dia = Integer.toString(fecha.get(Calendar.DAY_OF_MONTH));
@@ -171,6 +176,17 @@ public class GestorBD {
         try {
             Date fecha = formato.parse(GestorBD.fecha());
             return new java.sql.Date(fecha.getTime());
+            
+        } catch (ParseException ex) {
+           throw new MyException("Error creando fecha para SQL.\n"+ex.getMessage());
+        }
+    }
+    
+    public static java.sql.Date formatoFechaSQL(String fecha) throws MyException{
+        DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Date fechaAux = formato.parse(fecha);
+            return new java.sql.Date(fechaAux.getTime());
             
         } catch (ParseException ex) {
            throw new MyException("Error creando fecha para SQL.\n"+ex.getMessage());
@@ -295,7 +311,7 @@ public class GestorBD {
     
     public static void altaLote(int codLote,int tipo, int cantidad, boolean imperf) throws MyException{
         PreparedStatement ps;
-        if (GestorBD.existeLote(String.valueOf(codLote)) == null) {
+        if (GestorBD.existeLote(String.valueOf(codLote)) != null) {
             throw new MyException("El lote con codigo " +codLote +" ya existe.");
         } 
         else {
@@ -303,7 +319,7 @@ public class GestorBD {
                 ps = conn.prepareStatement("INSERT INTO LOTES VALUES (?,?,?,?,?)");
                 ps.setInt(1, codLote);
                 ps.setInt(2, tipo);
-                ps.setInt(1, cantidad);
+                ps.setInt(3, cantidad);
                 ps.setBoolean(4, imperf);
                 ps.setBoolean(5, true);
 
@@ -311,6 +327,92 @@ public class GestorBD {
             } catch (SQLException ex) {
                 throw new MyException("Error registrando el nuevo lote.");
             }
+        }
+    }
+    
+    public static ArrayList<modelo.Error> consultaListaErrores(String fechaIni, String fechaFin) throws MyException{
+        ArrayList<modelo.Error> listaErrores = new ArrayList<>();
+        PreparedStatement ps;
+        ResultSet rs;
+        String fechaIniFormato = formatoFechaSQL(fechaIni).toString();
+        String fechaFinFormato = formatoFechaSQL(fechaFin).toString();
+        
+        String consulta = "SELECT e.*, p.DIA FROM ERRORES e JOIN PRODUCCION p ON e.COD_ERROR = p.ERROR "
+                + "WHERE p.DIA >= ? AND p.dia <= ?;";
+        try{
+            ps = conn.prepareStatement(consulta);
+            ps.setString(1,fechaIniFormato);
+            ps.setString(2,fechaFinFormato);
+            rs = ps.executeQuery();
+            
+            while(rs.next()){
+                String cod = rs.getString("COD_ERROR");
+                int cant = rs.getInt("QTY_AFECTADO");
+                String descripcion = rs.getString("DESCRIPCION");
+                java.sql.Time horaSQL = rs.getTime("HORA_ERROR");
+                String hora = horaSQL.toString();
+                java.sql.Date diaSQL = rs.getDate("DIA");
+                String dia = diaSQL.toString();
+                
+                modelo.Error e = new modelo.Error(cod, cant, descripcion, dia, hora);
+                listaErrores.add(e);
+            }
+            
+        } catch (SQLException ex) {
+            throw new MyException("Error al realizar la consulta\nde los errores en base de datos\n" + ex.getMessage());
+        }
+        return listaErrores;
+    }
+    
+    public static int altaEmpleado(int tipoEmpleado,String dni, String nombre, String tlf, String contra) throws MyException{
+        PreparedStatement ps;
+        ResultSet rs;
+        int codEmp = 0;
+        
+        try {
+            
+            ps = conn.prepareStatement("SELECT MAX(COD_EMP) FROM empleados WHERE COD_EMP LIKE ?");
+            ps.setString(1,tipoEmpleado + "%");
+            rs = ps.executeQuery();
+            if(rs.next()){
+                
+                codEmp = rs.getInt(1) + 1 ;
+            }
+            
+        } catch (SQLException ex) {
+            throw new MyException("Error obteniendo el nuevo codigo de empleado.\n" + ex.getMessage());
+        }
+        
+        try {
+            if(tipoEmpleado != 3){
+                ps = conn.prepareStatement("INSERT INTO EMPLEADOS(COD_EMP,DNI_EMP,NOMBRE_EMP,TLF_EMP) VALUES (?,?,?,?)");
+                ps.setInt(1,codEmp);
+                ps.setString(2, dni);
+                ps.setString(3, nombre);
+                ps.setString(4, tlf);
+                
+                if(ps.executeUpdate() == 0){
+                    throw new MyException("Se han insertado 0 filas en la tabla EMPLEADOS");
+                }
+                return codEmp;
+            }
+            else{
+                ps = conn.prepareStatement("INSERT INTO EMPLEADOS(COD_EMP,DNI_EMP,NOMBRE_EMP,TLF_EMP,CONTRASENA_EMP) "
+                        + "VALUES (?,?,?,?,?)");
+                ps.setInt(1,codEmp);
+                ps.setString(2, dni);
+                ps.setString(3, nombre);
+                ps.setString(4, tlf);
+                ps.setString(5, contra);
+                
+                if(ps.executeUpdate() == 0){
+                    throw new MyException("Se han insertado 0 filas en la tabla EMPLEADOS");
+                }
+                return codEmp;
+            }
+            
+        } catch (SQLException ex) {
+            throw new MyException("Error registrando al nuevo empleado.\n" + ex.getMessage());
         }
     }
 }

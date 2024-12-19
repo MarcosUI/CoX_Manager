@@ -183,13 +183,14 @@ public class Fichaje extends javax.swing.JFrame {
         inputCodMaquina.setBorder(null);
         panelFondo.add(inputCodMaquina, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 330, 120, 20));
 
-        botonIniciarFichaje.setText("Iniciar Fichaje");
+        botonIniciarFichaje.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        botonIniciarFichaje.setText("INICIAR FICHAJE");
         botonIniciarFichaje.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonIniciarFichajeActionPerformed(evt);
             }
         });
-        panelFondo.add(botonIniciarFichaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 280, 140, 60));
+        panelFondo.add(botonIniciarFichaje, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 280, 180, 60));
 
         lineaEmp3.setForeground(new java.awt.Color(0, 0, 0));
         panelFondo.add(lineaEmp3, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 230, 120, 10));
@@ -358,7 +359,7 @@ public class Fichaje extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "El codigo de empleado 2 no existe.");
                     } else {
                         if (inputCodEmple1.getText().charAt(0) == '2') {
-                            Encargado encarg = new Encargado(e, l, m,
+                            VistaEncargado encarg = new VistaEncargado(e, l, m,
                                     Integer.parseInt(inputCodEmple2.getText()), 0, GestorBD.horaActual());
                             this.setVisible(false);
                         } 
@@ -366,7 +367,7 @@ public class Fichaje extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(this, "El fichaje de equipo no es compatible con códigos de gestor");
                         } 
                         else {
-                            Operario oper = new Operario(e, l, m,
+                            VistaOperario oper = new VistaOperario(e, l, m,
                                     Integer.parseInt(inputCodEmple2.getText()), 0, GestorBD.horaActual());
                             this.setVisible(false);
                         }
@@ -385,11 +386,11 @@ public class Fichaje extends javax.swing.JFrame {
                     } 
                     else {
                         if (inputCodEmple1.getText().charAt(0) == '2') {
-                            Encargado encarg = new Encargado(e, l, m, Integer.parseInt(inputCodEmple2.getText()),
+                            VistaEncargado encarg = new VistaEncargado(e, l, m, Integer.parseInt(inputCodEmple2.getText()),
                                     Integer.parseInt(inputCodEmple3.getText()), GestorBD.horaActual());
                             this.setVisible(false);
                         } else {
-                            Operario oper = new Operario(e, l, m, Integer.parseInt(inputCodEmple2.getText()),
+                            VistaOperario oper = new VistaOperario(e, l, m, Integer.parseInt(inputCodEmple2.getText()),
                                     Integer.parseInt(inputCodEmple3.getText()), GestorBD.horaActual());
                             this.setVisible(false);
                         }
@@ -398,10 +399,10 @@ public class Fichaje extends javax.swing.JFrame {
 
                 default:
                     if (inputCodEmple1.getText().charAt(0) == '2') {
-                        Encargado encarg = new Encargado(e, l, m, 0, 0, GestorBD.horaActual());
+                        VistaEncargado encarg = new VistaEncargado(e, l, m, 0, 0, GestorBD.horaActual());
                         this.setVisible(false);
                     } else {
-                        Operario oper = new Operario(e, l, m, 0, 0, GestorBD.horaActual());
+                        VistaOperario oper = new VistaOperario(e, l, m, 0, 0, GestorBD.horaActual());
                         this.setVisible(false);
                     }
                     break;

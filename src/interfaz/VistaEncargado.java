@@ -16,7 +16,7 @@ import modelo.Maquina;
  *
  * @author Marcos
  */
-public class Encargado extends javax.swing.JFrame {
+public class VistaEncargado extends javax.swing.JFrame {
 
     Empleado empleado;
     Lote lote;
@@ -27,7 +27,7 @@ public class Encargado extends javax.swing.JFrame {
     String codError;
     RegistroErrores re;
     
-    public Encargado(Empleado emp, Lote lote, Maquina maq, int emp2, int emp3, String horaIni) {
+    public VistaEncargado(Empleado emp, Lote lote, Maquina maq, int emp2, int emp3, String horaIni) {
         initComponents();
         this.setVisible(true);
         
@@ -216,7 +216,8 @@ public class Encargado extends javax.swing.JFrame {
     }//GEN-LAST:event_botonEncarSalirActionPerformed
 
     private void botonEncarListaErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEncarListaErrorActionPerformed
-        // TODO add your handling code here:
+        ListaErrores lE = new ListaErrores(this);
+        this.setVisible(false);
     }//GEN-LAST:event_botonEncarListaErrorActionPerformed
 
     private void botonEncarRegErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEncarRegErrorActionPerformed

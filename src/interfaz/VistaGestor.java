@@ -16,12 +16,12 @@ import modelo.Empleado;
  *
  * @author Marcos
  */
-public class Gestor extends javax.swing.JFrame {
+public class VistaGestor extends javax.swing.JFrame {
 
     Empleado empleado;
     String horaInicial;
     
-    public Gestor(Empleado e, String horaIni) {
+    public VistaGestor(Empleado e, String horaIni) {
         initComponents();
         this.setVisible(true);
         this.empleado = e;
@@ -151,7 +151,8 @@ public class Gestor extends javax.swing.JFrame {
     }//GEN-LAST:event_botonOperInformesActionPerformed
 
     private void botonOperRegEmpleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOperRegEmpleActionPerformed
-        // TODO add your handling code here:
+        RegistroEmpleado rE = new RegistroEmpleado(this);
+        this.setVisible(false);
     }//GEN-LAST:event_botonOperRegEmpleActionPerformed
 
     private void botonOperSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOperSalirActionPerformed

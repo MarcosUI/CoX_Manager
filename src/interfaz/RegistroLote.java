@@ -17,8 +17,8 @@ import javax.swing.JOptionPane;
  */
 public class RegistroLote extends javax.swing.JFrame {
 
-    Encargado e;
-    public RegistroLote(Encargado encarg) {
+    VistaEncargado e;
+    public RegistroLote(VistaEncargado encarg) {
         initComponents();
         this.setVisible(true);
         fechaRegLote.setText(GestorBD.fecha());

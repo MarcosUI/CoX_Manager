@@ -12,13 +12,31 @@ import modelo.Empleado;
  */
 public class ContrasenaGestor extends javax.swing.JFrame {
 
-    int intentos = 2;
+    int intentos = 3;
     Empleado emp;
+    RegistroEmpleado regEmp;
     
     public ContrasenaGestor(Empleado e) {
         initComponents();
         this.setVisible(true);
         this.emp = e;
+        this.setTitle("Contraseña");
+        txtEmpleContra.setText(String.valueOf(e.getCodEmpleado()));
+        botonEntrarGestor.setText("ENTRAR");
+        txtConfirmacionContra.setVisible(false);
+        inputConfirmacionContra.setVisible(false);
+    }
+    
+    public ContrasenaGestor(RegistroEmpleado rE){
+        initComponents();
+        this.setVisible(true);
+        this.regEmp = rE;
+        
+        this.setTitle("Nuevo gestor");
+        txtContrasena.setText("Contraseña de nuevo gestor");
+        botonEntrarGestor.setText("REGISTRAR");
+        txtConfirmacionContra.setVisible(true);
+        inputConfirmacionContra.setVisible(true);
     }
 
     /**
@@ -35,6 +53,8 @@ public class ContrasenaGestor extends javax.swing.JFrame {
         txtEmpleContra = new javax.swing.JLabel();
         inputContrasena = new javax.swing.JPasswordField();
         txtContrasena = new javax.swing.JLabel();
+        inputConfirmacionContra = new javax.swing.JPasswordField();
+        txtConfirmacionContra = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,6 +79,15 @@ public class ContrasenaGestor extends javax.swing.JFrame {
         txtContrasena.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtContrasena.setText("Introduzca su contraseña:");
 
+        inputConfirmacionContra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputConfirmacionContraActionPerformed(evt);
+            }
+        });
+
+        txtConfirmacionContra.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtConfirmacionContra.setText("Confirme la contraseña:");
+
         javax.swing.GroupLayout panelFondoContraLayout = new javax.swing.GroupLayout(panelFondoContra);
         panelFondoContra.setLayout(panelFondoContraLayout);
         panelFondoContraLayout.setHorizontalGroup(
@@ -73,10 +102,14 @@ public class ContrasenaGestor extends javax.swing.JFrame {
                         .addComponent(txtEmpleContra))
                     .addGroup(panelFondoContraLayout.createSequentialGroup()
                         .addGap(41, 41, 41)
-                        .addComponent(txtContrasena)
+                        .addGroup(panelFondoContraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtContrasena)
+                            .addComponent(txtConfirmacionContra))
                         .addGap(18, 18, 18)
-                        .addComponent(inputContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(43, Short.MAX_VALUE))
+                        .addGroup(panelFondoContraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(inputConfirmacionContra, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(inputContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         panelFondoContraLayout.setVerticalGroup(
             panelFondoContraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -87,7 +120,11 @@ public class ContrasenaGestor extends javax.swing.JFrame {
                 .addGroup(panelFondoContraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inputContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtContrasena))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGroup(panelFondoContraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inputConfirmacionContra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtConfirmacionContra))
+                .addGap(28, 28, 28)
                 .addComponent(botonEntrarGestor, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -112,35 +149,80 @@ public class ContrasenaGestor extends javax.swing.JFrame {
 
     private void botonEntrarGestorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEntrarGestorActionPerformed
         try{
+            // Si se ha accedido a la interfaz desde el fichaje
+            if (this.emp != null) {
+                if (!GestorBD.compruebaContrasena(inputContrasena.getText(), String.valueOf(emp.getCodEmpleado()))) {
+                    intentos--;
+                    inputContrasena.setText("");
+                    if (this.intentos == 0) {
+                        JOptionPane.showMessageDialog(this, "Has superado el límite de intentos\nFichaje cancelado");
+                        Fichaje f = new Fichaje();
+                        this.setVisible(false);
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this, "Contraseña errónea.\nIntentos restantes: " + intentos);
+                    }
+                } 
+                else {
+                    JOptionPane.showMessageDialog(this, "Contraseña correcta.\n"
+                            + "Entrando en el gestor: " + this.emp.getCodEmpleado() + ", " + this.emp.getNombre());
+                    VistaGestor gestor = new VistaGestor(this.emp, GestorBD.horaActual());
+                    this.setVisible(false);
+                }
+            }
             
-            if(!GestorBD.compruebaContrasena(inputContrasena.getText(), String.valueOf(emp.getCodEmpleado()))){
-                JOptionPane.showMessageDialog(this, "Contraseña errónea.\nIntentos restantes: " + intentos);
-                intentos--;
-                inputContrasena.setText("");
+            // Si se ha accedido desde Registro de empleados
+            else{
+                confirmarContraNuevoGestor();
+                
             }
-            else if (GestorBD.compruebaContrasena(inputContrasena.getText(), String.valueOf(emp.getCodEmpleado()))){
-                JOptionPane.showMessageDialog(this, "Contraseña correcta.\nEntrando en usuario " +
-                        emp.getCodEmpleado() + ", " + emp.getNombre());
-                Gestor gestor = new Gestor(this.emp,GestorBD.horaActual());
-                this.setVisible(false);
-            }
-            else if(intentos == 0){
-                JOptionPane.showMessageDialog(this, "Has superado el límite de intentos\nFichaje cancelado");
-                Fichaje f = new Fichaje();
-                this.setVisible(false);
-            }
+            
         }
         catch (MyException ex){
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }//GEN-LAST:event_botonEntrarGestorActionPerformed
 
+    private void inputConfirmacionContraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputConfirmacionContraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputConfirmacionContraActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonEntrarGestor;
+    private javax.swing.JPasswordField inputConfirmacionContra;
     private javax.swing.JPasswordField inputContrasena;
     private javax.swing.JPanel panelFondoContra;
+    private javax.swing.JLabel txtConfirmacionContra;
     private javax.swing.JLabel txtContrasena;
     private javax.swing.JLabel txtEmpleContra;
     // End of variables declaration//GEN-END:variables
+
+    private int comprueba() throws MyException {
+        if (intentos == 0) {
+            return intentos;
+        } 
+        else if (!GestorBD.compruebaContrasena(inputContrasena.getText(), String.valueOf(emp.getCodEmpleado()))) {
+            intentos--;
+            return intentos;
+        } 
+        else if (GestorBD.compruebaContrasena(inputContrasena.getText(), String.valueOf(emp.getCodEmpleado()))) {
+            JOptionPane.showMessageDialog(this, "Contraseña correcta.\nEntrando en usuario "
+                    + emp.getCodEmpleado() + ", " + emp.getNombre());
+            return -1;
+        }
+        return 0;
+    }
+    
+    private void confirmarContraNuevoGestor() throws MyException{
+        if(inputContrasena.getText().equals("")){
+            throw new MyException("El campo contraseña no puede estar vacío.");
+        }
+        else if(inputConfirmacionContra.getText().equals("")){
+            throw new MyException("Hay que confirmar la contraseña");
+        }
+        else if(inputContrasena.getText().equals(inputConfirmacionContra.getText())){
+            throw new MyException("Las contraseñas no coinciden");
+        }
+    }
 }

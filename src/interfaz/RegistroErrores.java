@@ -18,15 +18,15 @@ import modelo.Maquina;
  */
 public class RegistroErrores extends javax.swing.JFrame {
     
-    Operario oper;
-    Encargado encar;
-    Gestor gestor;
+    VistaOperario oper;
+    VistaEncargado encar;
+    VistaGestor gestor;
     String nomMaquina;
     String codLote;
     String codEmple;
     String codError;
     
-    public RegistroErrores(Operario o) {
+    public RegistroErrores(VistaOperario o) {
         initComponents();
         this.setVisible(true);
         
@@ -38,7 +38,7 @@ public class RegistroErrores extends javax.swing.JFrame {
         this.txtRegErrFecha.setText(GestorBD.fecha());
     }
     
-    public RegistroErrores(Encargado e) {
+    public RegistroErrores(VistaEncargado e) {
         initComponents();
         this.setVisible(true);
         
@@ -50,7 +50,7 @@ public class RegistroErrores extends javax.swing.JFrame {
         this.txtRegErrFecha.setText(GestorBD.fecha());
     }
     
-    public RegistroErrores(Gestor g) {
+    public RegistroErrores(VistaGestor g) {
         initComponents();
         this.setVisible(true);
         

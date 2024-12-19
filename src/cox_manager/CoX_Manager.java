@@ -18,11 +18,6 @@ import javax.swing.JOptionPane;
  */
 public class CoX_Manager {
 
-    
-    
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         GestorBD conexion = new GestorBD("admin","CoX_Manager","jdbc:mysql://127.0.0.1:3306/","marcos");
         try{
@@ -30,7 +25,6 @@ public class CoX_Manager {
                 JOptionPane.showMessageDialog(null, "Conexion iniciada correctamente");
                 Fichaje fich = new Fichaje();
             }
-            
         }
         catch(MyException ex){
             JOptionPane.showMessageDialog(null, ex.getMessage());

@@ -21,7 +21,7 @@ import modelo.Maquina;
  *
  * @author Marcos
  */
-public class Operario extends javax.swing.JFrame {
+public class VistaOperario extends javax.swing.JFrame {
 
     Empleado empleado;
     Lote lote;
@@ -32,7 +32,7 @@ public class Operario extends javax.swing.JFrame {
     String codError;
     RegistroErrores re;
     
-    public Operario(Empleado emp, Lote lote, Maquina maq, int emp2, int emp3, String horaIni){
+    public VistaOperario(Empleado emp, Lote lote, Maquina maq, int emp2, int emp3, String horaIni){
         initComponents();
         this.setVisible(true);
         
@@ -102,21 +102,23 @@ public class Operario extends javax.swing.JFrame {
         txtOperMaquina.setText("LOTE: COD_LOTE");
         panelFondo.add(txtOperMaquina, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 130, -1, -1));
 
+        botonOperRegError.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         botonOperRegError.setText("REGISTRAR ERROR");
         botonOperRegError.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonOperRegErrorActionPerformed(evt);
             }
         });
-        panelFondo.add(botonOperRegError, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 180, 140, 60));
+        panelFondo.add(botonOperRegError, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 180, 190, 60));
 
+        botonOperSalir.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         botonOperSalir.setText("SALIR");
         botonOperSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonOperSalirActionPerformed(evt);
             }
         });
-        panelFondo.add(botonOperSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 280, 140, 60));
+        panelFondo.add(botonOperSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 280, 190, 60));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
