@@ -20,6 +20,7 @@ public class VistaGestor extends javax.swing.JFrame {
 
     Empleado empleado;
     String horaInicial;
+    String codErrorRegistrado = "";
     
     public VistaGestor(Empleado e, String horaIni) {
         initComponents();
@@ -46,7 +47,6 @@ public class VistaGestor extends javax.swing.JFrame {
         txtGestorFecha = new javax.swing.JLabel();
         txtGestorEmpresa = new javax.swing.JLabel();
         txtGestorEmple = new javax.swing.JLabel();
-        botonOperRegError = new javax.swing.JButton();
         botonOperInformes = new javax.swing.JButton();
         botonOperSalir = new javax.swing.JButton();
         botonGestorListaErr = new javax.swing.JButton();
@@ -67,6 +67,7 @@ public class VistaGestor extends javax.swing.JFrame {
 
         txtGestorEmpresa.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         txtGestorEmpresa.setForeground(new java.awt.Color(240, 240, 240));
+        txtGestorEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/icono_CoX.png"))); // NOI18N
         txtGestorEmpresa.setText("CoX Manager");
 
         javax.swing.GroupLayout gestorPanelSuperior1Layout = new javax.swing.GroupLayout(gestorPanelSuperior1);
@@ -74,20 +75,20 @@ public class VistaGestor extends javax.swing.JFrame {
         gestorPanelSuperior1Layout.setHorizontalGroup(
             gestorPanelSuperior1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestorPanelSuperior1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addContainerGap()
                 .addComponent(txtGestorEmpresa)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 297, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 207, Short.MAX_VALUE)
                 .addComponent(txtGestorFecha)
-                .addGap(52, 52, 52))
+                .addGap(69, 69, 69))
         );
         gestorPanelSuperior1Layout.setVerticalGroup(
             gestorPanelSuperior1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gestorPanelSuperior1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addContainerGap()
                 .addGroup(gestorPanelSuperior1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtGestorEmpresa)
                     .addComponent(txtGestorFecha))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelFondo.add(gestorPanelSuperior1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 100));
@@ -96,10 +97,6 @@ public class VistaGestor extends javax.swing.JFrame {
         txtGestorEmple.setText("EMPLEADO: COD_EMPLE");
         panelFondo.add(txtGestorEmple, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, -1, -1));
 
-        botonOperRegError.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        botonOperRegError.setText("REGISTRAR ERROR");
-        panelFondo.add(botonOperRegError, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 180, -1, 50));
-
         botonOperInformes.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         botonOperInformes.setText("INFORMES");
         botonOperInformes.addActionListener(new java.awt.event.ActionListener() {
@@ -107,7 +104,7 @@ public class VistaGestor extends javax.swing.JFrame {
                 botonOperInformesActionPerformed(evt);
             }
         });
-        panelFondo.add(botonOperInformes, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 310, 170, 50));
+        panelFondo.add(botonOperInformes, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 200, 170, 50));
 
         botonOperSalir.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         botonOperSalir.setText("SALIR");
@@ -116,11 +113,16 @@ public class VistaGestor extends javax.swing.JFrame {
                 botonOperSalirActionPerformed(evt);
             }
         });
-        panelFondo.add(botonOperSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 240, 130, 50));
+        panelFondo.add(botonOperSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 290, 130, 50));
 
         botonGestorListaErr.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         botonGestorListaErr.setText("LISTA DE ERRORES");
-        panelFondo.add(botonGestorListaErr, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, 140, 50));
+        botonGestorListaErr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonGestorListaErrActionPerformed(evt);
+            }
+        });
+        panelFondo.add(botonGestorListaErr, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 200, 140, 50));
 
         botonOperRegEmple.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         botonOperRegEmple.setText("REGISTRAR EMPLEADO");
@@ -130,7 +132,7 @@ public class VistaGestor extends javax.swing.JFrame {
                 botonOperRegEmpleActionPerformed(evt);
             }
         });
-        panelFondo.add(botonOperRegEmple, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 180, 170, 50));
+        panelFondo.add(botonOperRegEmple, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, 170, 50));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,7 +149,8 @@ public class VistaGestor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonOperInformesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOperInformesActionPerformed
-        // TODO add your handling code here:
+        Informes inf = new Informes(this);
+        this.setVisible(false);
     }//GEN-LAST:event_botonOperInformesActionPerformed
 
     private void botonOperRegEmpleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOperRegEmpleActionPerformed
@@ -166,11 +169,15 @@ public class VistaGestor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_botonOperSalirActionPerformed
 
+    private void botonGestorListaErrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGestorListaErrActionPerformed
+        ListaErrores lE = new ListaErrores(this);
+        this.setVisible(false);
+    }//GEN-LAST:event_botonGestorListaErrActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonGestorListaErr;
     private javax.swing.JButton botonOperInformes;
     private javax.swing.JButton botonOperRegEmple;
-    private javax.swing.JButton botonOperRegError;
     private javax.swing.JButton botonOperSalir;
     private javax.swing.JPanel gestorPanelSuperior1;
     private javax.swing.JPanel panelFondo;
@@ -185,6 +192,10 @@ public class VistaGestor extends javax.swing.JFrame {
     
     public void volver(){
         this.setVisible(true);
+    }
+    
+    public void setCodErrorRegistrado(String codErrorRegistrado) {
+        this.codErrorRegistrado = codErrorRegistrado;
     }
 
 }

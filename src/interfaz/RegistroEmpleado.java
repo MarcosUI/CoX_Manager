@@ -18,6 +18,9 @@ import javax.swing.JOptionPane;
 public class RegistroEmpleado extends javax.swing.JFrame {
 
     int tipoEmpleado;
+    String nomEmpRegistrar;
+    String tlfEmpRegistrar;
+    String dniEmpRegistrar;
     VistaGestor vG;
     
     public RegistroEmpleado(VistaGestor vistaG) {
@@ -148,12 +151,16 @@ public class RegistroEmpleado extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Registrado empleado con codigo " + codNuevoEmp);
             } 
             else {
-
+                this.dniEmpRegistrar = inputRegEmpleDNI.getText();
+                this.nomEmpRegistrar = inputRegEmpleNombre.getText();
+                this.tlfEmpRegistrar = inputRegEmpleTlf.getText();
+                
+                ContrasenaGestor cG = new ContrasenaGestor(this);
+                this.setVisible(false);
             }
         } catch (MyException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
-        
+        }    
     }//GEN-LAST:event_btnRegEmpleActionPerformed
 
     
@@ -191,5 +198,22 @@ public class RegistroEmpleado extends javax.swing.JFrame {
         else if(!inputRegEmpleTlf.getText().matches(regExpTelefono)){
             throw new MyException("El telefono deben ser 9 digitos seguidos.");
         }
+        
+    }
+
+    public String getNomEmp() {
+        return this.nomEmpRegistrar;
+    }
+
+    public String getTlfemp() {
+        return this.tlfEmpRegistrar;
+    }
+
+    public String getDniEmp() {
+        return this.dniEmpRegistrar;
+    }
+    
+    public VistaGestor getVistaGestor(){
+        return this.vG;
     }
 }

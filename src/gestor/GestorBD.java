@@ -16,11 +16,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.Empleado;
 import modelo.Lote;
+import modelo.LoteActivo;
+import modelo.LoteTerminado;
 import modelo.Maquina;
 
 /**
@@ -45,6 +49,10 @@ public class GestorBD {
         this.conexion = conexion;
         this.password = password;
         this.conn = null;
+    }
+
+    public static Connection getConexion() {
+        return conn;
     }
     
     public boolean iniciarConexion() throws MyException {
@@ -171,6 +179,18 @@ public class GestorBD {
         }
         return dia + "/" + mes + "/" + anyo;
     }
+    
+    public static String fechaGuiones(){
+        Calendar fecha = new GregorianCalendar();
+        String anyo = Integer.toString(fecha.get(Calendar.YEAR));
+        String mes = Integer.toString(fecha.get(Calendar.MONTH) + 1);
+        String dia = Integer.toString(fecha.get(Calendar.DAY_OF_MONTH));
+        if(dia.length()<2){
+            dia = "0" + dia;
+        }
+        return dia + "-" + mes + "-" + anyo;
+    }
+    
     public static java.sql.Date fechaSQL() throws MyException{
         DateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
         try {
@@ -220,6 +240,46 @@ public class GestorBD {
         return String.valueOf(totalErrores);
     }
     
+    public static Integer[] consultaEstadoLote(int codL) throws MyException{
+        Integer[] datos = new Integer[2];
+        try{
+            
+            PreparedStatement ps = conn.prepareStatement("SELECT MAX(COD_MAQ), SUM(CANTIDAD) FROM PRODUCCION WHERE COD_LOTE = ?");
+            ps.setInt(1,codL);
+            ResultSet rs = ps.executeQuery();
+            
+            if(rs.next()){
+                datos[0] = rs.getInt(1);
+                datos[1] = rs.getInt(2);
+                return datos;
+            }
+            else{
+                throw new MyException("El lote aún no ha empezado el proceso de producción.");
+            }
+        } catch (SQLException ex) {
+            throw new MyException("Error accediendo a la tabla errores.");
+        }
+    }
+    
+    public static void consultaErroresLote(int codL,HashSet<String> errores) throws MyException{
+        Integer[] datos = new Integer[2];
+        try{
+            
+            PreparedStatement ps = conn.prepareStatement("SELECT ERROR FROM PRODUCCION WHERE COD_LOTE = ?");
+            ps.setInt(1,codL);
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                String codError = rs.getString("ERROR");
+                if(codError != null){
+                    errores.add(codError);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new MyException("Error accediendo a la tabla errores.");
+        }
+    }
+    
     public static boolean registrarError(String codErr, String desc, int cantidad, String hora) throws MyException{
         try {
             PreparedStatement ps = conn.prepareStatement("INSERT INTO errores VALUES (?,?,?,?);");
@@ -253,7 +313,7 @@ public class GestorBD {
             ps.setDate(4, GestorBD.fechaSQL());
             ps.setString(5, horaIni);
             ps.setString(6, horaFin);
-            ps.setInt(7, 500);
+            ps.setInt(7, 50);
 
             ps.executeUpdate();
             
@@ -281,7 +341,7 @@ public class GestorBD {
             ps.setString(5, codError);
             ps.setString(6, horaIni);
             ps.setString(7, horaFin);
-            ps.setInt(8, 500);
+            ps.setInt(8, 50);
 
             ps.executeUpdate();
             
@@ -364,11 +424,9 @@ public class GestorBD {
         return listaErrores;
     }
     
-    public static int altaEmpleado(int tipoEmpleado,String dni, String nombre, String tlf, String contra) throws MyException{
+    private static int codigoEmpleadoNuevo(int tipoEmpleado) throws MyException{
         PreparedStatement ps;
         ResultSet rs;
-        int codEmp = 0;
-        
         try {
             
             ps = conn.prepareStatement("SELECT MAX(COD_EMP) FROM empleados WHERE COD_EMP LIKE ?");
@@ -376,11 +434,21 @@ public class GestorBD {
             rs = ps.executeQuery();
             if(rs.next()){
                 
-                codEmp = rs.getInt(1) + 1 ;
+                return (rs.getInt(1) + 1) ;
             }
-            
+            return -1;
         } catch (SQLException ex) {
             throw new MyException("Error obteniendo el nuevo codigo de empleado.\n" + ex.getMessage());
+        }
+    }
+    
+    public static int altaEmpleado(int tipoEmpleado,String dni, String nombre, String tlf, String contra) throws MyException{
+        PreparedStatement ps;
+        ResultSet rs;
+        int codEmp = codigoEmpleadoNuevo(tipoEmpleado);
+        
+        if(codEmp == -1){
+            return codEmp;
         }
         
         try {
@@ -413,6 +481,140 @@ public class GestorBD {
             
         } catch (SQLException ex) {
             throw new MyException("Error registrando al nuevo empleado.\n" + ex.getMessage());
+        }
+    }
+    
+    public static void consultaLotesTerminados(Connection conn ,List<LoteTerminado> listaLotes) throws MyException{
+        
+        PreparedStatement ps;
+        ResultSet rs;
+        
+        String consulta = "SELECT l.COD_LOTE, l.TIPO, l.CANTIDAD AS CANTIDAD_LOTE, l.IMPERF_LOTE, "
+                + "SUM(p.CANTIDAD) AS CANTIDAD_PRODUCCION "
+                + "FROM LOTES l "
+                + "LEFT JOIN PRODUCCION p ON l.COD_LOTE = p.COD_LOTE "
+                + "WHERE l.LOTE_ACTIVO = FALSE GROUP BY l.COD_LOTE;";
+        try{
+            ps = conn.prepareStatement(consulta);
+            
+            rs = ps.executeQuery();
+            
+            while(rs.next()){
+                int codLote = rs.getInt("COD_LOTE");
+                int tipo = rs.getInt("TIPO");
+                int cantLote = rs.getInt("CANTIDAD_LOTE");
+                boolean imperf = rs.getBoolean("IMPERF_LOTE");
+                int cantProd = rs.getInt("CANTIDAD_PRODUCCION");
+                
+                LoteTerminado lot = new LoteTerminado(codLote,tipo,cantLote,cantProd,imperf);
+                listaLotes.add(lot);
+            }
+            
+        } catch (SQLException ex) {
+            throw new MyException("Error al realizar la consulta\nde los errores en base de datos\n" + ex.getMessage());
+        }
+    }
+    
+     public static void consultaLotesActivos(Connection conn ,List<LoteActivo> listaLotes) throws MyException{
+        
+        PreparedStatement ps;
+        ResultSet rs;
+        
+        String consulta = "SELECT l.COD_LOTE, l.TIPO, l.CANTIDAD AS CANTIDAD_LOTE, l.IMPERF_LOTE, "
+                + "SUM(p.CANTIDAD) AS CANTIDAD_PRODUCCION,MAX(p.COD_MAQ) AS MAYOR_COD_MAQ "
+                + "FROM LOTES l "
+                + "LEFT JOIN PRODUCCION p ON l.COD_LOTE = p.COD_LOTE "
+                + "WHERE l.LOTE_ACTIVO = TRUE GROUP BY l.COD_LOTE;";
+        try{
+            ps = conn.prepareStatement(consulta);
+            
+            rs = ps.executeQuery();
+            
+            while(rs.next()){
+                int codLote = rs.getInt("COD_LOTE");
+                int tipo = rs.getInt("TIPO");
+                int cantLote = rs.getInt("CANTIDAD_LOTE");
+                boolean imperf = rs.getBoolean("IMPERF_LOTE");
+                int cantProd = rs.getInt("CANTIDAD_PRODUCCION");
+                int codMaq = rs.getInt("MAYOR_COD_MAQ");
+                
+                LoteActivo lote = new LoteActivo(codLote,tipo,cantLote,cantProd,codMaq,imperf);
+                listaLotes.add(lote);
+            }
+            
+        } catch (SQLException ex) {
+            throw new MyException("Error al realizar la consulta\nde los errores en base de datos\n" + ex.getMessage());
+        }
+    }
+     
+     public static int consultaUltimaMaquina(Connection conn, int codLote) throws MyException {
+        PreparedStatement ps;
+        ResultSet rs;
+
+        String consulta = "SELECT MAX(COD_MAQ) FROM PRODUCCION WHERE COD_LOTE = ?";
+        try {
+            ps = conn.prepareStatement(consulta);
+            ps.setInt(1, codLote);
+            rs = ps.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+
+        } catch (SQLException ex) {
+            throw new MyException("Error al realizar la consulta\nde los errores en base de datos\n" + ex.getMessage());
+        }
+    }
+     
+    public static void consultaLotesDiarios(ArrayList<String> lineasFichero) throws MyException{
+        PreparedStatement ps;
+        ResultSet rs;
+        ArrayList<String> lineasTexto = new ArrayList<>();
+
+        String consulta = "SELECT COD_LOTE,MAX(COD_MAQ) FROM PRODUCCION WHERE DIA = ? GROUP BY COD_LOTE";
+        try {
+            ps = conn.prepareStatement(consulta);
+            ps.setDate(1,GestorBD.fechaSQL());
+            rs = ps.executeQuery();
+            
+            while(rs.next()){
+                int codLote = rs.getInt(1);
+                int codMaq = rs.getInt(2);
+                String errores = consultaErroresDiarios(codLote);
+                
+                
+                String linea = "Lote: " + String.valueOf(codLote)+ ", "
+                        + "Ultima máquina: " + String.valueOf(codMaq)+", " 
+                        + "Errores: " + errores;
+                
+                lineasFichero.add(linea);
+            }
+            
+        } catch (SQLException ex) {
+            throw new MyException("Error al realizar la consulta\nde los errores en base de datos\n" + ex.getMessage());
+        }
+    }
+    
+    private static String consultaErroresDiarios(int codLote) throws MyException{
+        PreparedStatement ps;
+        ResultSet rs;
+        ArrayList<String> lineasTexto = new ArrayList<>();
+
+        String consulta = "SELECT ERROR FROM produccion WHERE DIA = ? && COD_LOTE = ? GROUP BY ERROR;";
+        try {
+            ps = conn.prepareStatement(consulta);
+            ps.setDate(1,GestorBD.fechaSQL());
+            ps.setInt(2,codLote);
+            rs = ps.executeQuery();
+            String codErrores = "";
+            while (rs.next()) {
+                
+                if(rs.getString(1) != null){
+                    codErrores += rs.getString(1) + ", ";
+                }
+            }
+            return codErrores;
+            
+        } catch (SQLException ex) {
+            throw new MyException("Error al realizar la consulta\nde los errores en base de datos\n" + ex.getMessage());
         }
     }
 }

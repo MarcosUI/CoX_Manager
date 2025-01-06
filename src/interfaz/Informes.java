@@ -5,17 +5,25 @@
  */
 package interfaz;
 
+import excepciones.MyException;
+import gestor.GestorBD;
+import jasper.GeneraInforme;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Marcos
  */
 public class Informes extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Informes
-     */
-    public Informes() {
+    VistaGestor gestor;
+    
+    public Informes(VistaGestor vG) {
         initComponents();
+        this.gestor = vG;
+        
         this.setVisible(true);
         this.setTitle("Generar Informe");
         inputFechaInicialInforme.setVisible(false);
@@ -64,8 +72,9 @@ public class Informes extends javax.swing.JFrame {
 
         txtInforEmpresa.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         txtInforEmpresa.setForeground(new java.awt.Color(240, 240, 240));
+        txtInforEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/icono_CoX.png"))); // NOI18N
         txtInforEmpresa.setText("CoX Manager");
-        panelInforSuperior1.add(txtInforEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
+        panelInforSuperior1.add(txtInforEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
 
         listaOpcionesInforme.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "EMPLEADO", "LOTES", "ERRORES" }));
         listaOpcionesInforme.addActionListener(new java.awt.event.ActionListener() {
@@ -80,6 +89,11 @@ public class Informes extends javax.swing.JFrame {
         inputFechaFinalInforme.setDateFormatString("dd-MM-yyyy");
 
         botonGenerarInforme.setText("GENERAR INFORME");
+        botonGenerarInforme.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonGenerarInformeActionPerformed(evt);
+            }
+        });
 
         inputFechaInicialInforme.setDateFormatString("dd-MM-yyyy");
 
@@ -209,6 +223,24 @@ public class Informes extends javax.swing.JFrame {
                 break;
         }
     }//GEN-LAST:event_listaOpcionesInformeActionPerformed
+
+    private void botonGenerarInformeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonGenerarInformeActionPerformed
+        if(listaOpcionesInforme.getSelectedIndex() == 0 || listaOpcionesInforme.getSelectedIndex() == 2){
+            JOptionPane.showMessageDialog(this, "Este informe aún no está implementado.");
+        }
+        else{
+            String nombreInformeGenerado = "";
+            GeneraInforme informe = new GeneraInforme(GestorBD.getConexion());
+            try {
+                nombreInformeGenerado = informe.generarInforme();
+            } catch (MyException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            }
+            JOptionPane.showMessageDialog(this, "Informe generado: " + nombreInformeGenerado);
+            this.setVisible(false);
+            gestor.volver();
+        }
+    }//GEN-LAST:event_botonGenerarInformeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonGenerarInforme;

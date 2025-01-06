@@ -1,0 +1,2 @@
+Lote: 10560, Ultima máquina: 4, Errores: EST1056015, SEC1056014, 
+Lote: 12345, Ultima máquina: 5, Errores: 

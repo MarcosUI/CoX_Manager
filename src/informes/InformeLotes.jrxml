@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d1170f3b-68c7-47c4-9ce7-08ed1365036a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="TERMINADOS_DATASET" uuid="c3c8f3c8-d1f4-4318-8d14-add6cfb3cda5">
+		<queryString language="SQL">
+			<![CDATA[]]>
+		</queryString>
+		<field name="codLoteTerminado" class="java.lang.Integer"/>
+		<field name="tipoLoteTerminado" class="java.lang.Integer"/>
+		<field name="cantidadLoteTerminado" class="java.lang.Integer"/>
+		<field name="cantProcesadaTerminado" class="java.lang.Integer"/>
+		<field name="imperfeccionTerminado" class="java.lang.Boolean"/>
+		<variable name="porcentajeProcesadoTerminado" class="java.lang.Double">
+			<variableExpression><![CDATA[(double)$F{cantProcesadaTerminado}/$F{cantidadLoteTerminado}*100]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="ACTIVOS_DATASET" uuid="e869d2a1-d529-495b-a26b-8cc481c652e4">
+		<field name="codLote" class="java.lang.Integer"/>
+		<field name="tipoLote" class="java.lang.Integer"/>
+		<field name="cantLote" class="java.lang.Integer"/>
+		<field name="cantProducidaLote" class="java.lang.Integer"/>
+		<field name="ultimaMaquina" class="java.lang.Integer"/>
+		<field name="imperfLote" class="java.lang.Boolean"/>
+		<variable name="porcentajeProcesadoActivo" class="java.lang.String">
+			<variableExpression><![CDATA[$F{cantProducidaLote}/$F{cantLote}*100]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="TERMINADOS_DATA_SOURCE" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource" isForPrompting="false"/>
+	<parameter name="ACTIVOS_DATA_SOURCE" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="codGestor" class="java.lang.Integer"/>
+	<field name="nomGestor" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="800" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="787" width="515" height="13" backcolor="#E6E6E6" uuid="e7c4902f-19fb-4ec8-8792-a59b9700acae"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="787" width="40" height="13" backcolor="#E6E6E6" uuid="cf21d913-92b1-427b-b18a-924bdb72535a"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="787" width="100" height="13" uuid="501145ac-823a-44c0-a532-e2d681b32b63"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="85" y="29" width="244" height="47" uuid="b4053ddc-26db-4107-8a4e-c60bf001d88e"/>
+				<textElement>
+					<font size="30" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COX_MANAGER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="29" width="184" height="39" uuid="2c0e801e-5f94-4811-bfb9-dc1ad976d7e1"/>
+				<textElement verticalAlignment="Middle">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Lotes Procesados]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="31" y="106" width="100" height="20" uuid="8e50abd7-fc4d-424d-a5e2-70b44e7c0d09"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Generado por:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="106" width="59" height="20" uuid="08fbdac2-1ce9-41f2-9939-c8b9dedc8a1a"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Nombre:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="31" y="126" width="213" height="1" uuid="c19534f6-a68a-44bf-a1bb-f082b8d68521"/>
+			</line>
+			<line>
+				<reportElement x="260" y="125" width="214" height="1" uuid="a1c1a471-151e-425e-b59a-7bfab68dff47"/>
+			</line>
+			<componentElement>
+				<reportElement key="table" style="table" x="0" y="182" width="555" height="210" uuid="b26e473e-90fd-442b-bfbc-d428c0da548d"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="TERMINADOS_DATASET" uuid="a961be46-eca8-4764-8399-cb9c04e8f0a6">
+						<dataSourceExpression><![CDATA[$P{TERMINADOS_DATA_SOURCE}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="f5ba36fb-7aaf-49ef-9bf3-668c193f40c6">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="f5333cb0-fed0-46bc-9360-d344e6fa38ef"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[CODIGO ]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="2309ca1c-7ff6-4464-a3ff-5fefaa77f5d0"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{codLoteTerminado}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="7bde3100-6bdf-4b4e-8c88-a0bca7c83f49">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="549093a0-ff62-4e3c-9c81-ecac61d8ccb5"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[TIPO]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="3ef15982-3013-457c-b1e2-a851b9102cb9"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{tipoLoteTerminado}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="5c6fa48c-0832-462b-b418-d6c8af979911">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="f94691bb-eac4-47e4-86bd-1a2b41e0c6b0"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[CANTIDAD DEL LOTE]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="97a03030-c313-4bee-bad2-a7e098c95191"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{cantidadLoteTerminado}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="453236ff-1f0c-4a2e-a95f-402a436b06f9">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="301c783a-b946-40d4-9d89-71418af0f441"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[CANTIDAD PROCESADA]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="1d0381c6-6c3c-460a-9beb-daabdc798dfa"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{cantProcesadaTerminado}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="bd9f4389-34f3-40a6-a16d-5b4bbd375ed8">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="03e462ba-d369-43ea-9ea9-86eca7b08033"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[PORCENTAJE PROCESADO]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="30" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="90" height="30" uuid="91546574-f83e-4d07-bebf-f78fb07cedd2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{porcentajeProcesadoTerminado}+"%"]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="6c0edcbd-5bf6-48ef-8efb-696995b76d8a">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="d2375978-8bd0-4694-8adc-09eb581ad41d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[IMPERFECCION]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="30" rowSpan="1">
+							<textField>
+								<reportElement style="table_TD" x="0" y="0" width="90" height="30" uuid="bf201c16-a79f-4f5b-b0ab-7ac4800e4be1"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{imperfeccionTerminado}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement x="0" y="144" width="131" height="20" uuid="31e7c4d5-da0a-4d0d-8eb4-26a35d660220"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lotes Terminados]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="131" y="105" width="113" height="20" uuid="f9a39d46-3066-484d-9025-ea8f157da099"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codGestor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="319" y="107" width="100" height="20" uuid="9c28f62f-1a91-420a-ba9e-9de1528ca24d"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomGestor}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="3" width="85" height="86" uuid="ba9c1def-9625-4173-837b-410f6019b5de"/>
+				<imageExpression><![CDATA["C:\\Users\\Marcos\\Desktop\\CoX_Manager\\src\\iconos\\icono_CoX.png"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="0" y="405" width="555" height="1" uuid="9b9c6c54-8290-475d-bbeb-a59b5f0f7ff7"/>
+				<graphicElement>
+					<pen lineWidth="3.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="421" width="100" height="20" uuid="e9af2ac6-4032-4236-b96a-ba1627d31b15"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lotes Activos]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 1" style="table 1" x="0" y="465" width="555" height="220" uuid="3a911b05-69ac-4803-8f28-3ef9526982f6"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="ACTIVOS_DATASET" uuid="3aa33fca-dce2-4a44-b052-775e5aee8acd">
+						<dataSourceExpression><![CDATA[$P{ACTIVOS_DATA_SOURCE}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="fcdf9012-798b-4c72-9539-f61ee825f482">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="4476e039-ff49-4ad5-ad47-7ae95c8c706c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[CODIGO]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="6a6dbbaa-610c-4450-8e77-d60d2c5cc780"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{codLote}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="60" uuid="63c0a97d-fee9-4368-8f89-5a5e4cc1e777">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="30" uuid="3dbd2bc6-6e40-4870-927e-68e5c66f615c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[TIPO]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="60" height="30" uuid="8906945d-aa33-4dee-b4bc-00ba0cd10320"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{tipoLote}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="0fecc8a2-e992-4a5b-8338-11c8234a459a">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="db90c759-b148-4e19-b799-99df0392ee48"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[CANTIDAD DEL LOTE]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="c2cc8767-6b33-448e-be5c-73e7821260c5"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{cantLote}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="b4adea0a-d659-4e85-af85-af11e9dc1dd3">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="d841217d-1243-4708-8521-15e791fb5d60"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[CANTIDAD PROCESADA]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="df7fb078-381f-4d8d-bac4-ba193d5646f1"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{cantProducidaLote}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="a4137f92-772f-4f0e-b04a-f83aab3975bd">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="14fc8f71-c36b-4ad1-88c8-3e52069d570d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[PORCENTAJE PROCESADO]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="e5f761fb-834d-413b-9b81-77052dc9ae54"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{porcentajeProcesadoActivo}+"%"]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="55" uuid="59b25be7-bbf6-4dbd-932a-34d8d92089ed">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="55" height="30" uuid="5139b7c5-5a67-4ba8-8515-3cb564791a15"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[ULTIMA MAQUINA]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="55" height="30" uuid="1321859f-8ac8-4efc-a0ef-41cd1fff52f8"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{ultimaMaquina}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="5b87ed38-3cbc-4744-a7e4-66db29ace697">
+						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="deaf8e6f-4dae-41d9-bcb5-6d1f769b019e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[IMPERFECCION]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="table_TD" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="3ab8ecf2-90c5-44b5-8fcd-3fc0d4107d2f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{imperfLote}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

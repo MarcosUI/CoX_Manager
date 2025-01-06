@@ -94,20 +94,17 @@ public class Fichaje extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, fichajePanelSuperiorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(fichajeNomEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                 .addComponent(txtFichajeFecha)
-                .addGap(54, 54, 54))
+                .addGap(60, 60, 60))
         );
         fichajePanelSuperiorLayout.setVerticalGroup(
             fichajePanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(fichajePanelSuperiorLayout.createSequentialGroup()
-                .addGroup(fichajePanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(fichajePanelSuperiorLayout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addComponent(txtFichajeFecha))
-                    .addGroup(fichajePanelSuperiorLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(fichajeNomEmpresa)))
+                .addContainerGap()
+                .addGroup(fichajePanelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fichajeNomEmpresa)
+                    .addComponent(txtFichajeFecha))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 

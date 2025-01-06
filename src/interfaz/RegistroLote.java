@@ -144,21 +144,20 @@ public class RegistroLote extends javax.swing.JFrame {
 
     private void btnRegistrarLoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarLoteActionPerformed
         int codigo = 0;
-        try{
+        try {
             codigo = Integer.parseInt(inputCodLote.getText());
             int tipo = Integer.parseInt(inputTipoLote.getText());
             int cantidad = Integer.parseInt(inputCantLote.getText());
             GestorBD.altaLote(codigo, tipo, cantidad, checkImperf.isSelected());
+            JOptionPane.showMessageDialog(this, "Lote " + codigo + "registrado por el empleado " + e.getCodEmpEncar());
+            this.setVisible(false);
+            e.volver();
         }
         catch(NumberFormatException ex){
             JOptionPane.showMessageDialog(this, "Todos los campos del registro son numéricos.");
         } catch (MyException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
-        
-        JOptionPane.showMessageDialog(this, "Lote " + codigo + "registrado por el empleado " + e.getCodEmpEncar());
-        this.setVisible(false);
-        e.volver();
     }//GEN-LAST:event_btnRegistrarLoteActionPerformed
 
 

@@ -7,6 +7,16 @@ package interfaz;
 
 import excepciones.MyException;
 import gestor.GestorBD;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.Empleado;
 import modelo.Lote;
@@ -24,8 +34,7 @@ public class VistaEncargado extends javax.swing.JFrame {
     int emple2;
     int emple3;
     String horaInicial;
-    String codError;
-    RegistroErrores re;
+    String codErrorRegistrado = "";
     
     public VistaEncargado(Empleado emp, Lote lote, Maquina maq, int emp2, int emp3, String horaIni) {
         initComponents();
@@ -43,6 +52,7 @@ public class VistaEncargado extends javax.swing.JFrame {
         textoEncarMaquina.setText("MAQUINA: " + maquina.getCodMaquina());
         encarFecha.setText(GestorBD.fecha());
         this.setTitle(String.valueOf(empleado.getCodEmpleado()));
+        txtAvisoEncargado.setText(txtAvisoEncargado.getText() + " " + GestorBD.fecha());
     }
 
     /**
@@ -65,6 +75,8 @@ public class VistaEncargado extends javax.swing.JFrame {
         nomEncarEmpresa = new javax.swing.JLabel();
         botonEncarRegError = new javax.swing.JButton();
         botonEncarNuevoLote = new javax.swing.JButton();
+        btnEstadoLotes = new javax.swing.JButton();
+        txtAvisoEncargado = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(650, 400));
@@ -80,7 +92,7 @@ public class VistaEncargado extends javax.swing.JFrame {
                 botonEncarSalirActionPerformed(evt);
             }
         });
-        jPanel1.add(botonEncarSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 290, 150, 57));
+        jPanel1.add(botonEncarSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 200, 150, 57));
 
         botonEncarListaError.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         botonEncarListaError.setText("LISTA DE ERRORES");
@@ -89,11 +101,11 @@ public class VistaEncargado extends javax.swing.JFrame {
                 botonEncarListaErrorActionPerformed(evt);
             }
         });
-        jPanel1.add(botonEncarListaError, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 190, 150, 57));
+        jPanel1.add(botonEncarListaError, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 250, 160, 60));
 
         textoEncarMaquina.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         textoEncarMaquina.setText("MAQUINA: COD_MAQUINA");
-        jPanel1.add(textoEncarMaquina, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 120, -1, 40));
+        jPanel1.add(textoEncarMaquina, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 120, -1, 40));
 
         texoEncarLote.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         texoEncarLote.setText("LOTE: COD_LOTE");
@@ -111,6 +123,7 @@ public class VistaEncargado extends javax.swing.JFrame {
 
         nomEncarEmpresa.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         nomEncarEmpresa.setForeground(new java.awt.Color(240, 240, 240));
+        nomEncarEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/icono_CoX.png"))); // NOI18N
         nomEncarEmpresa.setText("CoX Manager");
 
         javax.swing.GroupLayout panelEncarSuperiorLayout = new javax.swing.GroupLayout(panelEncarSuperior);
@@ -118,23 +131,23 @@ public class VistaEncargado extends javax.swing.JFrame {
         panelEncarSuperiorLayout.setHorizontalGroup(
             panelEncarSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelEncarSuperiorLayout.createSequentialGroup()
-                .addGap(26, 26, 26)
+                .addContainerGap()
                 .addComponent(nomEncarEmpresa)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 262, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
                 .addComponent(encarFecha)
-                .addGap(87, 87, 87))
+                .addGap(59, 59, 59))
         );
         panelEncarSuperiorLayout.setVerticalGroup(
             panelEncarSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelEncarSuperiorLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
+                .addGap(12, 12, 12)
                 .addGroup(panelEncarSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nomEncarEmpresa)
                     .addComponent(encarFecha))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.add(panelEncarSuperior, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, -1));
+        jPanel1.add(panelEncarSuperior, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 100));
 
         botonEncarRegError.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         botonEncarRegError.setText("REGISTRAR ERROR");
@@ -143,7 +156,7 @@ public class VistaEncargado extends javax.swing.JFrame {
                 botonEncarRegErrorActionPerformed(evt);
             }
         });
-        jPanel1.add(botonEncarRegError, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 190, 150, 57));
+        jPanel1.add(botonEncarRegError, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, 160, 57));
 
         botonEncarNuevoLote.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         botonEncarNuevoLote.setText("NUEVO LOTE");
@@ -152,17 +165,30 @@ public class VistaEncargado extends javax.swing.JFrame {
                 botonEncarNuevoLoteActionPerformed(evt);
             }
         });
-        jPanel1.add(botonEncarNuevoLote, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 190, 150, 57));
+        jPanel1.add(botonEncarNuevoLote, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 150, 57));
+
+        btnEstadoLotes.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnEstadoLotes.setText("ESTADO DE LOTE");
+        btnEstadoLotes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEstadoLotesActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnEstadoLotes, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 250, 150, 60));
+
+        txtAvisoEncargado.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtAvisoEncargado.setText("Al finalizar el fichaje se generará un archivo con el registro de lotes manipulados a dia:");
+        jPanel1.add(txtAvisoEncargado, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 630, 40));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
 
         pack();
@@ -171,7 +197,7 @@ public class VistaEncargado extends javax.swing.JFrame {
     private void botonEncarSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEncarSalirActionPerformed
          String fichados = "";
         try {
-            if(re == null){
+            if(this.codErrorRegistrado.equals("")){
                 GestorBD.registrarFichajeSinError(this.empleado.getCodEmpleado(),this.lote.getCodLote(),this.maquina.getCodMaquina(),
                                         this.horaInicial);
                 fichados += this.empleado.getCodEmpleado();
@@ -189,23 +215,28 @@ public class VistaEncargado extends javax.swing.JFrame {
             }
             else{
                 GestorBD.registrarFichajeConError(this.empleado.getCodEmpleado(),this.lote.getCodLote(),this.maquina.getCodMaquina(),
-                                        this.horaInicial,re.getCodErrorRegistrado());
+                                        this.horaInicial,this.codErrorRegistrado);
                 fichados += this.empleado.getCodEmpleado();
                 if(this.emple2 != 0){
                     GestorBD.registrarFichajeConError(this.emple2,this.lote.getCodLote(),this.maquina.getCodMaquina(),
-                                        this.horaInicial,re.getCodErrorRegistrado());
+                                        this.horaInicial,this.codErrorRegistrado);
                     fichados += ", " + this.emple2;
                     if(this.emple3 != 0){
                         GestorBD.registrarFichajeConError(this.emple3,this.lote.getCodLote(),this.maquina.getCodMaquina(),
-                                        this.horaInicial,re.getCodErrorRegistrado());
+                                        this.horaInicial,this.codErrorRegistrado);
                         fichados += ", " + this.emple3;
                     }
                 }
-                fichados += "\nCon error: " + re.getCodErrorRegistrado();
+                fichados += "\nCon error: " + this.codErrorRegistrado;
             }
             if (maquina.getCodMaquina() == 7){
                 fichados += "\n Lote " + lote.getCodLote() + " terminado. Registrado como \"NO ACTIVO\" en Base de Datos.";
             }
+            // Genera el fichero de registro de lotes manipulados del dia
+            String nomFich = ficheroLotesDia();
+            JOptionPane.showMessageDialog(this, "Archivo " + nomFich + " generado en\n "
+                + "C:\\Users\\Marcos\\Desktop\\CoX_Manager\\Registro_Diario");
+            
             JOptionPane.showMessageDialog(this, "Registrado el fichaje para: " + fichados);
             Fichaje f = new Fichaje();
             this.setVisible(false);
@@ -221,12 +252,12 @@ public class VistaEncargado extends javax.swing.JFrame {
     }//GEN-LAST:event_botonEncarListaErrorActionPerformed
 
     private void botonEncarRegErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEncarRegErrorActionPerformed
-        if(re == null){
-            re = new RegistroErrores(this);
+        if(codErrorRegistrado.equals("")){
+            RegistroErrores re = new RegistroErrores(this);
         this.setVisible(false);
         }
         else{
-            JOptionPane.showMessageDialog(this, "Ya se ha registrado un error.\nCodigo:"+re.getCodErrorRegistrado());
+            JOptionPane.showMessageDialog(this, "Ya se ha registrado un error.\nCodigo: "+this.codErrorRegistrado);
         }
     }//GEN-LAST:event_botonEncarRegErrorActionPerformed
 
@@ -235,12 +266,18 @@ public class VistaEncargado extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_botonEncarNuevoLoteActionPerformed
 
+    private void btnEstadoLotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEstadoLotesActionPerformed
+        EstadoLote eL = new EstadoLote(this);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnEstadoLotesActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonEncarListaError;
     private javax.swing.JButton botonEncarNuevoLote;
     private javax.swing.JButton botonEncarRegError;
     private javax.swing.JButton botonEncarSalir;
+    private javax.swing.JButton btnEstadoLotes;
     private javax.swing.JLabel encarFecha;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel nomEncarEmpresa;
@@ -248,6 +285,7 @@ public class VistaEncargado extends javax.swing.JFrame {
     private javax.swing.JLabel texoEncarLote;
     private javax.swing.JLabel textoEncarEmple;
     private javax.swing.JLabel textoEncarMaquina;
+    private javax.swing.JLabel txtAvisoEncargado;
     // End of variables declaration//GEN-END:variables
 
     public String getCodEmpEncar(){
@@ -269,4 +307,52 @@ public class VistaEncargado extends javax.swing.JFrame {
     public void volver(){
         this.setVisible(true);
     }
+
+    public void setCodErrorRegistrado(String codErrorRegistrado) {
+        this.codErrorRegistrado = codErrorRegistrado;
+    }
+    
+    private static String ficheroLotesDia() throws MyException{
+        String rutaCarpeta = "C:\\Users\\Marcos\\Desktop\\CoX_Manager\\Registro_Diario";
+        File directorio = new File(rutaCarpeta);
+        
+        String nombreArchivo = "lotes" + GestorBD.fechaGuiones();
+        if(directorio.exists() && directorio.isDirectory()){
+            File[] numArchivos = directorio.listFiles();
+            nombreArchivo += String.valueOf(numArchivos.length);
+        }
+        File archivo = new File(rutaCarpeta + "\\" + nombreArchivo + ".txt");
+        
+        ArrayList<String> lineasFichero = new ArrayList<>();
+        try {
+            archivo.createNewFile();
+            GestorBD.consultaLotesDiarios(lineasFichero);
+            for (String linea : lineasFichero) {
+                System.out.println(linea);
+            }
+            
+            OutputStream os = new FileOutputStream(archivo);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+            bw.write("------------------ ");
+            bw.write("Registro de actividad ");
+            bw.write(GestorBD.fecha());
+            bw.write(" ------------------\n\n");
+            
+            for (String linea : lineasFichero) {
+                bw.write(linea);
+                bw.write("\n");
+            }
+            bw.write("\n---------------------------------------------------------------------");
+            bw.close();
+            return archivo.getName();
+            
+        } catch (MyException ex) {
+            throw ex;
+        } catch (FileNotFoundException ex) {
+            throw new MyException("Error creando el fichero " + nombreArchivo + ".txt");
+        } catch (IOException ex) {
+            throw new MyException("Error escribiendo en el fichero" + nombreArchivo + ".txt");
+        }
+    }
+    
 }

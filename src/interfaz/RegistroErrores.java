@@ -24,7 +24,7 @@ public class RegistroErrores extends javax.swing.JFrame {
     String nomMaquina;
     String codLote;
     String codEmple;
-    String codError;
+    String codError = "";
     
     public RegistroErrores(VistaOperario o) {
         initComponents();
@@ -50,14 +50,7 @@ public class RegistroErrores extends javax.swing.JFrame {
         this.txtRegErrFecha.setText(GestorBD.fecha());
     }
     
-    public RegistroErrores(VistaGestor g) {
-        initComponents();
-        this.setVisible(true);
-        
-        this.gestor = g;
-        this.setTitle("Registro de error");
-        this.txtRegErrFecha.setText(GestorBD.fecha());
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -215,21 +208,22 @@ public class RegistroErrores extends javax.swing.JFrame {
         try{
             String codErr = this.nomMaquina.substring(0, 3) + this.codLote + GestorBD.numErrores();
             int cantidad = Integer.parseInt(inputRegErrCant.getText());
-            this.codError = codErr;
+            
             if(GestorBD.registrarError(codErr, inputRegErrDesc.getText(), cantidad, GestorBD.horaActual())){
-                
+                this.codError = codErr;
                 JOptionPane.showMessageDialog(this, "Error "+ codErr+" registrado por el empleado:" + this.codEmple);
-                this.setVisible(false);
+                
                 
                 switch (codEmple.charAt(0)) {
                     case '1':
                         oper.volver();
+                        oper.setCodErrorRegistrado(codErr);
                         break;
                     case '2':
                         encar.volver();
+                        encar.setCodErrorRegistrado(codErr);
                         break;
                     default:
-                        gestor.volver();
                         break;
                 }
                 this.setVisible(false);
@@ -250,12 +244,13 @@ public class RegistroErrores extends javax.swing.JFrame {
         switch (codEmple.charAt(0)) {
             case '1':
                 oper.volver();
+                oper.setCodErrorRegistrado("");
                 break;
             case '2':
                 encar.volver();
+                encar.setCodErrorRegistrado("");
                 break;
             default:
-                gestor.volver();
                 break;
         }
         this.setVisible(false);

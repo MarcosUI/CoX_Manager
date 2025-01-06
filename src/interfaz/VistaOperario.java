@@ -29,8 +29,8 @@ public class VistaOperario extends javax.swing.JFrame {
     int emple2;
     int emple3;
     String horaInicial;
-    String codError;
-    RegistroErrores re;
+    String codErrorRegistrado = "";
+    
     
     public VistaOperario(Empleado emp, Lote lote, Maquina maq, int emp2, int emp3, String horaIni){
         initComponents();
@@ -85,8 +85,9 @@ public class VistaOperario extends javax.swing.JFrame {
 
         txtOperEmpresa.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         txtOperEmpresa.setForeground(new java.awt.Color(240, 240, 240));
+        txtOperEmpresa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/icono_CoX.png"))); // NOI18N
         txtOperEmpresa.setText("CoX Manager");
-        panelOperSuperior1.add(txtOperEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, -1, -1));
+        panelOperSuperior1.add(txtOperEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, -1, -1));
 
         panelFondo.add(panelOperSuperior1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 100));
 
@@ -135,19 +136,19 @@ public class VistaOperario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonOperRegErrorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOperRegErrorActionPerformed
-        if(re == null){
-            re = new RegistroErrores(this);
+        if(codErrorRegistrado.equals("")){
+            RegistroErrores re = new RegistroErrores(this);
         this.setVisible(false);
         }
         else{
-            JOptionPane.showMessageDialog(this, "Ya se ha registrado un error.\nCodigo:"+re.getCodErrorRegistrado());
+            JOptionPane.showMessageDialog(this, "Ya se ha registrado un error.\nCodigo: "+this.codErrorRegistrado);
         }
     }//GEN-LAST:event_botonOperRegErrorActionPerformed
 
     private void botonOperSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonOperSalirActionPerformed
         String fichados = "";
         try {
-            if(re == null){
+            if(codErrorRegistrado.equals("")){
                 GestorBD.registrarFichajeSinError(this.empleado.getCodEmpleado(),this.lote.getCodLote(),this.maquina.getCodMaquina(),
                                         this.horaInicial);
                 fichados += this.empleado.getCodEmpleado();
@@ -165,19 +166,19 @@ public class VistaOperario extends javax.swing.JFrame {
             }
             else{
                 GestorBD.registrarFichajeConError(this.empleado.getCodEmpleado(),this.lote.getCodLote(),this.maquina.getCodMaquina(),
-                                        this.horaInicial,re.getCodErrorRegistrado());
+                                        this.horaInicial,this.codErrorRegistrado);
                 fichados += this.empleado.getCodEmpleado();
                 if(this.emple2 != 0){
                     GestorBD.registrarFichajeConError(this.emple2,this.lote.getCodLote(),this.maquina.getCodMaquina(),
-                                        this.horaInicial,re.getCodErrorRegistrado());
+                                        this.horaInicial,this.codErrorRegistrado);
                     fichados += ", " + this.emple2;
                     if(this.emple3 != 0){
                         GestorBD.registrarFichajeConError(this.emple3,this.lote.getCodLote(),this.maquina.getCodMaquina(),
-                                        this.horaInicial,re.getCodErrorRegistrado());
+                                        this.horaInicial,this.codErrorRegistrado);
                         fichados += ", " + this.emple3;
                     }
                 }
-                fichados += "\nCon error: " + re.getCodErrorRegistrado();
+                fichados += "\nCon error: " + this.codErrorRegistrado;
             }
             if (maquina.getCodMaquina() == 7){
                 fichados += "\n Lote " + lote.getCodLote() + " terminado. Registrado como \"NO ACTIVO\" en Base de Datos.";
@@ -215,8 +216,8 @@ public class VistaOperario extends javax.swing.JFrame {
         return String.valueOf(this.maquina.getNombreMaquina());
     }
     
-    public void setCodError(String codErr){
-        this.codError = codErr;
+    public void setCodErrorRegistrado(String codErrorRegistrado) {
+        this.codErrorRegistrado = codErrorRegistrado;
     }
     
     public void volver(){

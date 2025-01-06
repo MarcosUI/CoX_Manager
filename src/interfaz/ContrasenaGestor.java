@@ -173,8 +173,22 @@ public class ContrasenaGestor extends javax.swing.JFrame {
             
             // Si se ha accedido desde Registro de empleados
             else{
-                confirmarContraNuevoGestor();
-                
+                try{
+                    confirmarContraNuevoGestor();
+                    int codNuevoEmp = GestorBD.altaEmpleado(3, regEmp.getDniEmp(), 
+                        regEmp.getNomEmp(),regEmp.getTlfemp(), inputContrasena.getText());
+                    if(codNuevoEmp == -1){
+                        JOptionPane.showMessageDialog(this, "No se pudo dar de alta el gestor.");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(this, "Registrado empleado con codigo " + codNuevoEmp);
+                    }
+                    regEmp.getVistaGestor().volver();
+                    this.setVisible(false);
+                }
+                catch ( MyException ex){
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                }
             }
             
         }
@@ -221,7 +235,7 @@ public class ContrasenaGestor extends javax.swing.JFrame {
         else if(inputConfirmacionContra.getText().equals("")){
             throw new MyException("Hay que confirmar la contraseña");
         }
-        else if(inputContrasena.getText().equals(inputConfirmacionContra.getText())){
+        else if(!inputContrasena.getText().equals(inputConfirmacionContra.getText())){
             throw new MyException("Las contraseñas no coinciden");
         }
     }

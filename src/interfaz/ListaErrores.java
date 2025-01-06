@@ -42,6 +42,7 @@ public class ListaErrores extends javax.swing.JFrame {
         initComponents();
         this.setVisible(true);
         this.gestor = g;
+        listaFecha.setText(GestorBD.fecha());
         
         dtm = (DefaultTableModel) tablaErrores.getModel();
         dtm.addTableModelListener(tablaErrores);
