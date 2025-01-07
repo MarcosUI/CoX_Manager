@@ -5,6 +5,7 @@
  */
 package interfaz;
 
+import configuracion.Config;
 import excepciones.MyException;
 import gestor.GestorBD;
 import java.io.BufferedWriter;
@@ -235,7 +236,7 @@ public class VistaEncargado extends javax.swing.JFrame {
             // Genera el fichero de registro de lotes manipulados del dia
             String nomFich = ficheroLotesDia();
             JOptionPane.showMessageDialog(this, "Archivo " + nomFich + " generado en\n "
-                + "C:\\Users\\Marcos\\Desktop\\CoX_Manager\\Registro_Diario");
+                + Config.rutaFichDiario);
             
             JOptionPane.showMessageDialog(this, "Registrado el fichaje para: " + fichados);
             Fichaje f = new Fichaje();
@@ -313,7 +314,7 @@ public class VistaEncargado extends javax.swing.JFrame {
     }
     
     private static String ficheroLotesDia() throws MyException{
-        String rutaCarpeta = "C:\\Users\\Marcos\\Desktop\\CoX_Manager\\Registro_Diario";
+        String rutaCarpeta = Config.rutaFichDiario;
         File directorio = new File(rutaCarpeta);
         
         String nombreArchivo = "lotes" + GestorBD.fechaGuiones();

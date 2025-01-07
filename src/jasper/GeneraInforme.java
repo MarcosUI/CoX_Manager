@@ -5,6 +5,7 @@
  */
 package jasper;
 
+import configuracion.Config;
 import excepciones.MyException;
 import gestor.GestorBD;
 import java.io.File;
@@ -37,10 +38,10 @@ public class GeneraInforme {
     }
     
     public String generarInforme() throws MyException{
-        String rutaPDF = "C:\\Users\\Marcos\\Desktop\\CoX_Manager\\Informes_Generados\\";
+        String rutaPDF = Config.rutaInformesPDF + "\\";
         try {
             //Paso 1. Obtener clase del objeto JasperReports
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile("C:\\Users\\Marcos\\Desktop\\CoX_Manager\\src\\informes\\InformeLotes.jasper");
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObjectFromFile("src/informes/InformeLotes.jasper");
 
             // Paso 2 Crear clase objeto JRDataSource
             List<Gestor> listaGestor = new ArrayList<Gestor>();
@@ -82,7 +83,7 @@ public class GeneraInforme {
             String fecha = GestorBD.fechaGuiones();
             String numero = "";
             
-            File ruta = new File("C:\\Users\\Marcos\\Desktop\\CoX_Manager\\Informes_Generados");
+            File ruta = new File(Config.rutaInformesPDF);
             if(ruta.exists() && ruta.isDirectory()){
                 File[] numFicheros = ruta.listFiles();
                 numero = String.valueOf(numFicheros.length);
