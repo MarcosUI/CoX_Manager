@@ -255,6 +255,15 @@ public class Fichaje extends javax.swing.JFrame {
             if(inputCodEmple1.getText().charAt(0) == '3'){
                 iniciarFichajeGestor(botonSeleccionado);
             }
+            else if(botonSeleccionado == 2 && inputCodEmple2.getText().charAt(0) == '3'){
+                JOptionPane.showMessageDialog(this, "No se puede insertar un codigo de gestor"
+                        + " para el empleado 2.");
+            }
+            else if(botonSeleccionado == 3 && (inputCodEmple2.getText().charAt(0) == '3' || 
+                    inputCodEmple3.getText().charAt(0) == '3' )){
+                JOptionPane.showMessageDialog(this, "No se puede insertar un codigo de gestor"
+                        + " para los empleados 2 o 3");
+            }
             else{
                 iniciarFichaje(botonSeleccionado);
             }

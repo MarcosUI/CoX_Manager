@@ -21,7 +21,7 @@ public class ContrasenaGestor extends javax.swing.JFrame {
         this.setVisible(true);
         this.emp = e;
         this.setTitle("Contraseña");
-        txtEmpleContra.setText(String.valueOf(e.getCodEmpleado()));
+        txtEmpleContra.setText(txtEmpleContra.getText() + String.valueOf(e.getCodEmpleado()));
         botonEntrarGestor.setText("ENTRAR");
         txtConfirmacionContra.setVisible(false);
         inputConfirmacionContra.setVisible(false);
@@ -37,6 +37,8 @@ public class ContrasenaGestor extends javax.swing.JFrame {
         botonEntrarGestor.setText("REGISTRAR");
         txtConfirmacionContra.setVisible(true);
         inputConfirmacionContra.setVisible(true);
+        String codGestor = rE.getVistaGestor().getCodEmpGestor();
+        txtEmpleContra.setText(txtEmpleContra.getText() +  codGestor);
     }
 
     /**
@@ -68,7 +70,7 @@ public class ContrasenaGestor extends javax.swing.JFrame {
         });
 
         txtEmpleContra.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        txtEmpleContra.setText("EMPLEADO: COD_EMP");
+        txtEmpleContra.setText("EMPLEADO:");
 
         inputContrasena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
